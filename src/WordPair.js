@@ -9,9 +9,17 @@ export class WordPair {
    * Creates a new word pair.
    *
    * @param {string} source - The word used as the starting point of the pair.
-   * @param {string} target -  The word associated with the source word.
+   * @param {string} target - The word associated with the source word.
    */
   constructor(source, target) {
+    if (typeof source !== 'string' || source.trim() === '') {
+    throw new TypeError('Source word must be a non-empty string')
+  }
+
+  if (typeof target !== 'string' || target.trim() === '') {
+    throw new TypeError('Target word  must be a non-empty string')
+  }
+
     this.#source = source
     this.#target = target
   }
