@@ -20,8 +20,8 @@ export class WordPair {
     throw new TypeError('Target word  must be a non-empty string')
   }
 
-    this.#source = source
-    this.#target = target
+    this.#source = source.trim()
+    this.#target = target.trim()
   }
 
   /**
