@@ -1,7 +1,7 @@
 {
-  "name": "js-cli-template",
+  "name": "lexpairs",
   "version": "1.0.0",
-  "description": "1DV610 - JavaScript CLI Template / Boilerplate",
+  "description": "",
   "type": "module",
   "main": "src/app.js",
   "bin": {
@@ -22,7 +22,7 @@
   },
   "contributors": [
     "1dv610 Organization",
-    "YOUR NAME <YOUR EMAIL>"
+    "Lynda Gunnarsdottir <lg223fn@student.lnu.se>"
   ],
   "license": "Unlicense",
   "private": false,
