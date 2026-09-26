@@ -98,6 +98,15 @@ export class Lexicon {
   }
 
   /**
+   * Returns a shallow copy of all WordPair objects in the lexicon.
+   *
+   * @returns {WordPair[]} An array containing all WordPair objects.
+   */
+  getAllPairs() {
+    return [...this.#pairs]
+  }
+
+  /**
    * Clears all word pairs from the lexicon.
    */
   clear() {
