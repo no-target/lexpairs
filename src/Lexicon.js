@@ -18,6 +18,20 @@ export class Lexicon {
     }
   }
 
+  
+  /**
+   *
+   * @param pair
+   */
+  add(pair) {
+   if (!(pair instanceof WordPair)) {
+    throw new TypeError('Expected a WordPair')
+   }
+  
+  this.#pairs.push(pair)
+}
+
+
 /**
  *
  */
