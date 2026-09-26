@@ -41,4 +41,14 @@ export class WordPair {
   get target() {
     return this.#target
   }
+
+  /**
+   * Checks whether a pair is equal to another pair.
+   *
+   * @param {WordPair} other - The pair to compare against.
+   * @returns {boolean} True if source and target both match.
+   */
+  equals(other) {
+    return this.#source === other.source && this.#target === other.target
+  }
 }
