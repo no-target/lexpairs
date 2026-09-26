@@ -13,12 +13,12 @@ export class WordPair {
    */
   constructor(source, target) {
     if (typeof source !== 'string' || source.trim() === '') {
-    throw new TypeError('Source word must be a non-empty string')
-  }
+      throw new TypeError('Source word must be a non-empty string')
+    }
 
-  if (typeof target !== 'string' || target.trim() === '') {
-    throw new TypeError('Target word  must be a non-empty string')
-  }
+    if (typeof target !== 'string' || target.trim() === '') {
+      throw new TypeError('Target word  must be a non-empty string')
+    }
 
     this.#source = source.trim()
     this.#target = target.trim()
@@ -32,6 +32,7 @@ export class WordPair {
   get source() {
     return this.#source
   }
+
   /**
    * Gets the target word.
    *
