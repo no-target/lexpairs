@@ -1,14 +1,17 @@
 import { WordPair } from './WordPair'
 
 /**
- *
+ * Represents a Lexicon that stores unique WordPairs.
  */
 export class Lexicon {
   #pairs
 
   /**
+   * Creates a new instance of Lexicon.
    *
-   * @param initialPairs
+   * @param {WordPair[]} [initialPairs=[]] - An optional array of WordPair objects.
+   * @throws {TypeError} If any element in initialPairs is not an instance of WordPair.
+   * @throws {Error} If initialPairs contains duplicate word pairs.
    */
   constructor(initialPairs = []) {
     this.#pairs = []
@@ -19,8 +22,11 @@ export class Lexicon {
   }
 
   /**
+   * Adds a new word pair to the lexicon.
    *
-   * @param pair
+   * @param {WordPair} pair - The word pair to add.
+   * @throws {TypeError} If the argument is not an instance of WordPair.
+   * @throws {Error} If an identical word pair already exists in the lexicon.
    */
   add(pair) {
     if (!(pair instanceof WordPair)) {
@@ -35,9 +41,12 @@ export class Lexicon {
   }
 
   /**
+   * Removes and returns a word pair based on the source and target words.
    *
-   * @param source
-   * @param target
+   * @param {string} source - The source word of the pair to remove.
+   * @param {string} target - The target word of the pair to remove.
+   * @returns {WordPair} The removed word pair.
+   * @throws {Error} If the word pair is not found in the lexicon.
    */
   remove(source, target) {
     const index = this.#findIndex(source, target)
@@ -46,9 +55,38 @@ export class Lexicon {
   }
 
   /**
+   * Finds and returns all target words associated with a given source word.
    *
-   * @param source
-   * @param target
+   * @param {string} source - The source word to look up.
+   * @returns {string[]} An array of matching target words.
+   */
+  findTargets(source) {
+    return this.#pairs.filter((pair) => pair.source === source).map((pair) => pair.target)
+  }
+
+  /**
+   * Gets the total number of word pairs in the lexicon.
+   *
+   * @returns {number} The number of word pairs.
+   */
+  get size() {
+    return this.#pairs.length
+  }
+
+  /**
+   * Clears all word pairs from the lexicon.
+   */
+  clear() {
+    this.#pairs = []
+  }
+
+  /**
+   * Finds the index of a specified word pair.
+   *
+   * @param {string} source - The source word to search for.
+   * @param {string} target - The target word to search for.
+   * @returns {number} The index of the word pair in the internal array.
+   * @throws {Error} If the word pair is not found in the lexicon.
    */
   #findIndex(source, target) {
     const index = this.#pairs.findIndex((pair) => pair.source === source && pair.target === target)
@@ -56,27 +94,5 @@ export class Lexicon {
       throw new Error(`Wordpair '${source}' -> '${target}' not found`)
     }
     return index
-  }
-
-  /**
-   *
-   * @param source
-   */
-  findTargets(source) {
-    return this.#pairs.filter((pair) => pair.source === source).map((pair) => pair.target)
-  }
-
-  /**
-   *
-   */
-  get size() {
-    return this.#pairs.length
-  }
-
-  /**
-   *
-   */
-  clear() {
-    this.#pairs = []
   }
 }
