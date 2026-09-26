@@ -27,6 +27,10 @@ export class Lexicon {
       throw new TypeError('Expected a WordPair')
     }
 
+     if (this.#pairs.some(existingPair => existingPair.equals(pair))) {
+      throw new Error(`Wordpair '${pair.source}' -> '${pair.target}' already exists`)
+    }
+
     this.#pairs.push(pair)
   }
 
