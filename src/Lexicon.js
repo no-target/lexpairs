@@ -58,7 +58,7 @@ export class Lexicon {
    * Finds and returns all target words associated with a given source word.
    *
    * @param {string} source - The source word to look up.
-   * @returns {string[]} An array of matching target words.
+   * @returns {string[]} An array of target words that match the source.
    */
   findTargets(source) {
     return this.#pairs
@@ -70,12 +70,22 @@ export class Lexicon {
    * Finds and returns all source words associated with a given target word.
    *
    * @param {string} target - The target word to look up.
-   * @returns {string[]} An array of matching source words.
+   * @returns {string[]} An array of source words that match the target.
    */
   findSources(target) {
     return this.#pairs
     .filter((pair) => pair.target === target)
     .map((pair) => pair.source)
+  }
+
+  /**
+   * Finds and returns all WordPair objects associated with a given source word.
+   *
+   * @param {string} source - The source word to search for.
+   * @returns {WordPair[]} An array of WordPair objects that match the source.
+   */
+  findPairs(source) {
+    return this.#pairs.filter((pair) => pair.source === source)
   }
 
   /**
@@ -95,7 +105,7 @@ export class Lexicon {
   }
 
   /**
-   * Finds the index of a specified word pair.
+   * Helper method to find the index of a specified word pair.
    *
    * @param {string} source - The source word to search for.
    * @param {string} target - The target word to search for.
