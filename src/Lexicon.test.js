@@ -34,13 +34,13 @@ describe('Lexicon', () => {
     })
 
     it('should throw when adding an identical pair twice', () => {
-      lexicon.add(new WordPair('gift', 'poisoned'))
-      expect(() => lexicon.add(new WordPair('gift', 'poisoned'))).toThrow()
+      lexicon.add(new WordPair('gift', 'poison'))
+      expect(() => lexicon.add(new WordPair('gift', 'poison'))).toThrow()
     })
 
     it('should allow multiple different translations for the same source word', () => {
       lexicon.add(new WordPair('gift', 'married'))
-      lexicon.add(new WordPair('gift', 'poisoned'))
+      lexicon.add(new WordPair('gift', 'poison'))
 
       expect(lexicon.size).toBe(2)
     })
@@ -63,12 +63,58 @@ describe('Lexicon', () => {
 
     it('should not remove a pair when only the source matches', () => {
       lexicon.add(new WordPair('gift', 'married'))
-      lexicon.add(new WordPair('gift', 'poisoned'))
+      lexicon.add(new WordPair('gift', 'poison'))
 
-      lexicon.remove('gift', 'poisoned')
+      lexicon.remove('gift', 'poison')
 
       expect(lexicon.size).toBe(1)
       expect(lexicon.findTargets('gift')).toEqual(['married'])
     })
   })
+
+  describe('findTargets()', () => {
+    it('should return all target words associated with a given source word', () => {
+      lexicon.add(new WordPair('gift', 'married'))
+      lexicon.add(new WordPair('gift', 'poison'))
+
+      expect(lexicon.findTargets('gift')).toEqual(['married', 'poison'])
+    })
+
+    it('should return an empty array if the source word is not found', () => {
+      expect(lexicon.findTargets('nonexistent')).toEqual([])
+    })
+  })
+
+  describe('findSources()', () => {
+    it('should return all source words associated with a given target word', () => {
+      lexicon.add(new WordPair('schlafen', 'sova'))
+      lexicon.add(new WordPair('pennen', 'sova'))
+
+      expect(lexicon.findSources('sova')).toEqual(['schlafen', 'pennen'])
+    })
+
+    it('should return an empty array if the target word is not found', () => {
+      expect(lexicon.findSources('nonexistent')).toEqual([])
+    })
+  })
+
+  describe('findPairs()', () => {
+    it('should return all WordPair instances associated with a given source word', () => {
+      lexicon.add(new WordPair('gift', 'married'))
+      lexicon.add(new WordPair('gift', 'poison'))
+
+      const pairs = lexicon.findPairs('gift')
+
+      expect(pairs).toHaveLength(2)
+      expect(pairs.every((pair) => pair instanceof WordPair)).toBe(true)
+      expect(pairs.map((p) => p.target)).toEqual(['married', 'poison'])
+    })
+
+    it('should return an empty array if no pairs match the source word', () => {
+      expect(lexicon.findPairs('nonexistent')).toEqual([])
+    })
+  })
+
+
+
 })
