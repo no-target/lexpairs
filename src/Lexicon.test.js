@@ -23,27 +23,52 @@ describe('Lexicon', () => {
   })
 
   describe('add', () => {
-  it('should add a word pair to lexicon', () => {
-    lexicon.add(new WordPair('haus', 'hus'))
-    expect(lexicon.size).toBe(1)
+    it('should add a word pair to lexicon', () => {
+      lexicon.add(new WordPair('haus', 'hus'))
+      expect(lexicon.size).toBe(1)
+    })
+
+    it('should throw a TypeError when argument is not a WordPair', () => {
+      expect(() => lexicon.add('haus')).toThrow(TypeError)
+      expect(() => lexicon.add({ source: 'haus', target: 'hus' })).toThrow(TypeError)
+    })
+
+    it('should throw when adding an identical pair twice', () => {
+      lexicon.add(new WordPair('gift', 'poisoned'))
+      expect(() => lexicon.add(new WordPair('gift', 'poisoned'))).toThrow()
+    })
+
+    it('should allow multiple different translations for the same source word', () => {
+      lexicon.add(new WordPair('gift', 'married'))
+      lexicon.add(new WordPair('gift', 'poisoned'))
+
+      expect(lexicon.size).toBe(2)
+    })
   })
 
-  it('should throw a TypeError when argument is not a WordPair', () => {
-    expect(() => lexicon.add('haus')).toThrow(TypeError)
-    expect(() => lexicon.add({ source: 'haus', target: 'hus' })).toThrow(TypeError)
-  })
+  describe('remove', () => {
+    it('should remove an existing pair and return it', () => {
+      lexicon.add(new WordPair('haus', 'hus'))
 
-  it('should throw when adding an identical pair twice', () => {
-    lexicon.add(new WordPair('gift', 'poisoned'))
-    expect(() => lexicon.add(new WordPair('gift', 'poisoned'))).toThrow()
-  })
+      const removed = lexicon.remove('haus', 'hus')
 
-  it('should allow multiple different translations for the same source word', () => {
-    lexicon.add(new WordPair('gift', 'married'))
-    lexicon.add(new WordPair('gift', 'poisoned'))
+      expect(removed.source).toBe('haus')
+      expect(removed.target).toBe('hus')
+      expect(lexicon.size).toBe(0)
+    })
 
-    expect(lexicon.size).toBe(2)
-  })
+    it('should throw when the pair does not exist', () => {
+      expect(() => lexicon.remove('nonexistent', 'word')).toThrow()
+    })
 
+    it('should not remove a pair when only the source matches', () => {
+      lexicon.add(new WordPair('gift', 'married'))
+      lexicon.add(new WordPair('gift', 'poisoned'))
+
+      lexicon.remove('gift', 'poisoned')
+
+      expect(lexicon.size).toBe(1)
+      expect(lexicon.findTargets('gift')).toEqual(['married'])
+    })
   })
 })

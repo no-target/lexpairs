@@ -27,7 +27,7 @@ export class Lexicon {
       throw new TypeError('Expected a WordPair')
     }
 
-     if (this.#pairs.some(existingPair => existingPair.equals(pair))) {
+    if (this.#pairs.some((existingPair) => existingPair.equals(pair))) {
       throw new Error(`Wordpair '${pair.source}' -> '${pair.target}' already exists`)
     }
 
@@ -63,8 +63,7 @@ export class Lexicon {
    * @param source
    */
   findTargets(source) {
-    return this.#pairs.filter(pair => pair.source === source)
-    .map(pair => pair.target)
+    return this.#pairs.filter((pair) => pair.source === source).map((pair) => pair.target)
   }
 
   /**
