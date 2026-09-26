@@ -119,4 +119,13 @@ export class Lexicon {
     }
     return index
   }
+
+  /**
+   * Allows iteration over all WordPair objects in the lexicon.
+   *
+   * @returns {IterableIterator<WordPair>}
+   */
+  [Symbol.iterator]() {
+    return this.#pairs.values()
+  }
 }
