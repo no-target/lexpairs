@@ -72,7 +72,7 @@ describe('Lexicon', () => {
     })
   })
 
-  describe('findTargets()', () => {
+  describe('findTargets', () => {
     it('should return all target words associated with a given source word', () => {
       lexicon.add(new WordPair('gift', 'married'))
       lexicon.add(new WordPair('gift', 'poison'))
@@ -85,7 +85,7 @@ describe('Lexicon', () => {
     })
   })
 
-  describe('findSources()', () => {
+  describe('findSources', () => {
     it('should return all source words associated with a given target word', () => {
       lexicon.add(new WordPair('schlafen', 'sova'))
       lexicon.add(new WordPair('pennen', 'sova'))
@@ -98,7 +98,7 @@ describe('Lexicon', () => {
     })
   })
 
-  describe('findPairs()', () => {
+  describe('findPairs', () => {
     it('should return all WordPair instances associated with a given source word', () => {
       lexicon.add(new WordPair('gift', 'married'))
       lexicon.add(new WordPair('gift', 'poison'))
@@ -115,6 +115,24 @@ describe('Lexicon', () => {
     })
   })
 
+  describe('getAllPairs', () => {
+    it('should return an array containing all WordPair objects', () => {
+      const pair1 = new WordPair('haus', 'hus')
+      const pair2 = new WordPair('katze', 'katt')
+      lexicon.add(pair1)
+      lexicon.add(pair2)
 
+      expect(lexicon.getAllPairs()).toEqual([pair1, pair2])
+    })
+
+    it('should protect internal state against external array mutations', () => {
+      lexicon.add(new WordPair('haus', 'hus'))
+      const copy = lexicon.getAllPairs()
+
+      copy.pop()
+
+      expect(lexicon.size).toBe(1)
+    })
+  })
 
 })
