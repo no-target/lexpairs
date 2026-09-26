@@ -60,6 +60,15 @@ export class Lexicon {
 
   /**
    *
+   * @param source
+   */
+  findTargets(source) {
+    return this.#pairs.filter(pair => pair.source === source)
+    .map(pair => pair.target)
+  }
+
+  /**
+   *
    */
   get size() {
     return this.#pairs.length

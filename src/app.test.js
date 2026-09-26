@@ -1,5 +1,7 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { WordPair } from './WordPair.js'
+import { Lexicon } from './Lexicon.js'
+
 
 describe('WordPair', () => {
   it('should create a word pair with a source and target word', () => {
@@ -41,5 +43,26 @@ describe('WordPair', () => {
 
     expect(pair.source).toBe('haus')
     expect(pair.target).toBe('hus')
+  })
+})
+
+describe('Lexicon', () => {
+  let lexicon
+
+  beforeEach(() => {
+    lexicon = new Lexicon()
+  })
+
+  describe('constructor', () => {
+    it('should create an empty lexicon by default', () => {
+      expect(lexicon.size).toBe(0)
+    })
+
+    it('should accept an array of initial pairs', () => {
+      const initial = [new WordPair('haus', 'hus'), new WordPair('katze', 'katt')]
+      const populated = new Lexicon(initial)
+
+      expect(populated.size).toBe(2)
+    })
   })
 })
