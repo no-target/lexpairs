@@ -61,7 +61,21 @@ export class Lexicon {
    * @returns {string[]} An array of matching target words.
    */
   findTargets(source) {
-    return this.#pairs.filter((pair) => pair.source === source).map((pair) => pair.target)
+    return this.#pairs
+    .filter((pair) => pair.source === source)
+    .map((pair) => pair.target)
+  }
+
+  /**
+   * Finds and returns all source words associated with a given target word.
+   *
+   * @param {string} target - The target word to look up.
+   * @returns {string[]} An array of matching source words.
+   */
+  findSources(target) {
+    return this.#pairs
+    .filter((pair) => pair.target === target)
+    .map((pair) => pair.source)
   }
 
   /**
