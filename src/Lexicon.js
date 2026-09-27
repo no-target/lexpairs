@@ -61,9 +61,7 @@ export class Lexicon {
    * @returns {string[]} An array of target words that match the source.
    */
   findTargets(source) {
-    return this.#pairs
-    .filter((pair) => pair.source === source)
-    .map((pair) => pair.target)
+    return this.#pairs.filter((pair) => pair.source === source).map((pair) => pair.target)
   }
 
   /**
@@ -73,9 +71,7 @@ export class Lexicon {
    * @returns {string[]} An array of source words that match the target.
    */
   findSources(target) {
-    return this.#pairs
-    .filter((pair) => pair.target === target)
-    .map((pair) => pair.source)
+    return this.#pairs.filter((pair) => pair.target === target).map((pair) => pair.source)
   }
 
   /**

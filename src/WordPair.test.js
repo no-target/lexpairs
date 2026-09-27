@@ -42,5 +42,4 @@ describe('WordPair', () => {
     expect(pair.source).toBe('haus')
     expect(pair.target).toBe('hus')
   })
-  
 })

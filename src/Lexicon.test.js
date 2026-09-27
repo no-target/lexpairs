@@ -135,4 +135,27 @@ describe('Lexicon', () => {
     })
   })
 
+  describe('size', () => {
+    it('should return 0 for an empty lexicon', () => {
+      expect(lexicon.size).toBe(0)
+    })
+    
+    it('should increase when a pair is added', () => {
+      lexicon.add(new WordPair('haus', 'hus'))
+      expect(lexicon.size).toBe(1)
+    })
+
+    it('should decrease when a pair is removed', () => {
+      lexicon.add(new WordPair('katze', 'katt'))
+      lexicon.remove('katze', 'katt')
+      expect(lexicon.size).toBe(0)
+    })
+
+    it('should remain unchanged when attempting to remove a non-existent pair', () => {
+     lexicon.add(new WordPair('haus', 'hus'))
+
+     expect(() => lexicon.remove('nonexistent', 'word')).toThrow()
+     expect(lexicon.size).toBe(1)
+    })
+  })
 })
