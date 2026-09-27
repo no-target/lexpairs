@@ -20,6 +20,10 @@ describe('Lexicon', () => {
 
       expect(populated.size).toBe(2)
     })
+
+    it('should throw if initial pairs contain an invalid item', () => {
+      expect(() => new Lexicon(['not a word pair'])).toThrow(TypeError)
+    })
   })
 
   describe('add', () => {
