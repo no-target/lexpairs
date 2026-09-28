@@ -1,24 +1,17 @@
-import fs from 'node:fs'
 import { WordPair } from './WordPair.js'
 
 /**
- *
+ * Converts raw text (delimited text or JSON) into WordPair instances.
  */
 export class LexiconParser {
   /**
+   * Parses delimited text (CSV, TSV, txt or similar) into word pairs.
+   * Each line produces at most one pair, built from its first two fields.
+   * Extra fields are ignored, and empty or incomplete lines are skipped.
    *
-   * @param filePath
-   */
-  parse(filePath) {
-    if (!fs.existsSync(filePath)) {
-      throw new Error(`File not found: ${filePath}`)
-    }
-  }
-
-  /**
-   *
-   * @param text
-   * @param delimiter
+   * @param {string} text - The raw text.
+   * @param {string} [delimiter=','] - The character separating fields on each line.
+   * @returns {WordPair[]} The parsed word pairs.
    */
   parseDelimitedText(text, delimiter = ',') {
     const lines = text.split(/\r?\n/)
@@ -26,17 +19,14 @@ export class LexiconParser {
 
     for (const line of lines) {
       const trimmedLine = line.trim()
-
       if (!trimmedLine) {
-    continue
-  }
-      const parts = trimmedLine.split(delimiter)
+        continue
+      }
 
-      const source = parts[0]
-      const target = parts[1]
-
+      // Trim each field so whitespace-only fields count as empty and the line is skipped
+      const [source, target] = trimmedLine.split(delimiter).map((field) => field.trim())
       if (source && target) {
-        pairs.push(this.#createWordPair(source, target))
+        pairs.push(new WordPair(source, target))
       }
     }
 
@@ -44,29 +34,29 @@ export class LexiconParser {
   }
 
   /**
+   * Parses a JSON array of objects into word pairs.
    *
-   * @param text
-   * @param sourceKey
-   * @param targetKey
+   * @param {string} text - A JSON string containing an array of objects.
+   * @param {Object} keys - Names of the properties holding each word.
+   * @param {string} keys.sourceKey - Name of the property holding the source word.
+   * @param {string} keys.targetKey - Name of the property holding the target word.
+   * @returns {WordPair[]} The parsed word pairs.
+   * @throws {TypeError} If sourceKey or targetKey is missing.
+   * @throws {SyntaxError} If the text is not valid JSON.
+   * @throws {TypeError} If the JSON is not an array.
+   * @throws {TypeError} If an item lacks the source or target key, or the value is not a non-empty string.
    */
-  parseJson(text, { source, target }) {
-   const data = JSON.parse(text)
-
-    return data.map((item) => {
-    return this.#createWordPair(item[source], item[target])
-  })
-  }
-
-  /**
-   *
-   * @param source
-   * @param target
-   */
-  #createWordPair(source, target) {
-    if (!source || !target) {
-      throw new Error('Source and target are required')
+  parseJson(text, { sourceKey, targetKey } = {}) {
+    if (!sourceKey || !targetKey) {
+      throw new TypeError('Both sourceKey and targetKey are required')
     }
 
-    return new WordPair(source, target)
+    const data = JSON.parse(text)
+
+    if (!Array.isArray(data)) {
+      throw new TypeError('Expected a JSON array of objects')
+    }
+
+    return data.map((item) => new WordPair(item[sourceKey], item[targetKey]))
   }
 }
