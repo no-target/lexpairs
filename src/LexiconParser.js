@@ -1,7 +1,6 @@
 import fs from 'node:fs'
 import { WordPair } from './WordPair.js'
 
-
 /**
  *
  */
@@ -27,13 +26,17 @@ export class LexiconParser {
 
     for (const line of lines) {
       const trimmedLine = line.trim()
+
+      if (!trimmedLine) {
+    continue
+  }
       const parts = trimmedLine.split(delimiter)
 
       const source = parts[0]
       const target = parts[1]
 
       if (source && target) {
-        pairs.push(new WordPair(source, target))
+        pairs.push(this.#createWordPair(source, target))
       }
     }
 
@@ -47,24 +50,26 @@ export class LexiconParser {
    * @param targetKey
    */
   parseJson(text, sourceKey, targetKey) {
-    const data = JSON.parse(text)
-    const pairs = []
+   const data = JSON.parse(text)
 
-    for (const item of data) {
+    return data.map((item) => {
       const source = item[sourceKey]
       const target = item[targetKey]
 
-      if (source === undefined || target === undefined) {
-      throw new Error(
-        `Could not find source or target field in JSON object`
-      )
-    }
-
-      if (source && target) {
-        pairs.push(new WordPair(source, target))
-      }
-    }
-    return pairs
+      return this.#createWordPair(source, target)
+    })
   }
 
+  /**
+   *
+   * @param source
+   * @param target
+   */
+  #createWordPair(source, target) {
+    if (!source || !target) {
+      throw new Error('Source and target are required')
+    }
+
+    return new WordPair(source, target)
+  }
 }
