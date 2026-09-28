@@ -10,7 +10,7 @@ export class LexiconParser {
    * Extra fields are ignored, and empty or incomplete lines are skipped.
    *
    * @param {string} text - The raw text.
-   * @param {string} [delimiter=','] - The character separating fields on each line.
+   * @param {string} [delimiter=','] - The character separating fields on each line, defaults to ','.
    * @returns {WordPair[]} The parsed word pairs.
    */
   parseDelimitedText(text, delimiter = ',') {
@@ -29,7 +29,6 @@ export class LexiconParser {
         pairs.push(new WordPair(source, target))
       }
     }
-
     return pairs
   }
 
