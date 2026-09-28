@@ -1,13 +1,5 @@
 export class FuzzyMatcher {
-  /**
-   * Calculates the Levenshtein distance between two strings: the minimum
-   * number of single-character insertions, deletions and substitutions
-   * needed to turn one string into the other.
-   *
-   * @param {string} source - The string to start from.
-   * @param {string} target - The string to end up with.
-   * @returns {number} The edit distance between the two strings.
-   */
+
   distance(source, target) {
     const distances = this.#createWithEdges(source, target)
 
@@ -16,12 +8,7 @@ export class FuzzyMatcher {
     return distances[source.length][target.length]
   }
 
-  /**
-   *
-   * @param {string} source - The string to start from.
-   * @param {string} target - The string to end up with.
-   * @returns {number[][]} The table with its edges filled in.
-   */
+
   #createWithEdges(source, target) {
     const distances = []
     for (let sourceIndex = 0; sourceIndex <= source.length; sourceIndex++) {
@@ -35,13 +22,7 @@ export class FuzzyMatcher {
     return distances
   }
 
-   /**
-   * Fills every cell that is not on the first row or column.
-   *
-   * @param {number[][]} distances - The table to fill in.
-   * @param {string} source - The string to start from.
-   * @param {string} target - The string to end up with.
-   */
+   
   #fillInner(distances, source, target) {
     for (let sourceIndex = 1; sourceIndex <= source.length; sourceIndex++) {
       for (let targetIndex = 1; targetIndex <= target.length; targetIndex++) {
@@ -51,16 +32,7 @@ export class FuzzyMatcher {
     }
   }
 
-  /**
-   * Finds the cheapest way to reach a cell from its neighbours.
-   *
-   * @param {number[][]} distances - The table built so far.
-   * @param {string} source - The string to start from.
-   * @param {string} target - The string to end up with.
-   * @param {number} sourceIndex - How many characters of the source are used.
-   * @param {number} targetIndex - How many characters of the target are used.
-   * @returns {number} The edit distance for this cell.
-   */
+  
   #lowestCost(distances, source, target, sourceIndex, targetIndex) {
     const sourceCharacter = source[sourceIndex - 1]
     const targetCharacter = target[targetIndex - 1]
