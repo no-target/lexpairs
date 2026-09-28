@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises'
 
-
 /**
  *
  */
@@ -15,12 +14,12 @@ export class LexiconFileReader {
     this.#parser = parser
   }
 
-    async readDelimited(filePath, delimiter = ',') {
+  async readDelimited(filePath, delimiter = ',') {
     const text = await this.#readText(filePath)
     return this.#parser.parseDelimitedText(text, delimiter)
   }
 
-    async readJson(filePath, keys) {
+  async readJson(filePath, keys) {
     const text = await this.#readText(filePath)
     return this.#parser.parseJson(text, keys)
   }
@@ -36,7 +35,7 @@ export class LexiconFileReader {
       if (error.code === ' ENOENT') {
         throw new Error(`File not found: ${filePath}`, { cause: error })
       }
-          throw error
+      throw error
     }
   }
 }
