@@ -49,15 +49,12 @@ export class LexiconParser {
    * @param sourceKey
    * @param targetKey
    */
-  parseJson(text, sourceKey, targetKey) {
+  parseJson(text, { source, target }) {
    const data = JSON.parse(text)
 
     return data.map((item) => {
-      const source = item[sourceKey]
-      const target = item[targetKey]
-
-      return this.#createWordPair(source, target)
-    })
+    return this.#createWordPair(item[source], item[target])
+  })
   }
 
   /**
