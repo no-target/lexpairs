@@ -8,7 +8,7 @@ export class WordPair {
   /**
    * Creates a new word pair.
    *
-   * @param {string} headword - The word used as the starting point of the pair.
+   * @param {string} headword - The primary word of the pair.
    * @param {string} counterpart - The word associated with the headword.
    */
   constructor(headword, counterpart) {
@@ -25,18 +25,18 @@ export class WordPair {
   }
 
   /**
-   * Gets the source word.
+   * Gets the headword.
    *
-   * @returns {string} The source word.
+   * @returns {string} The headword.
    */
   get headword() {
     return this.#headword
   }
 
   /**
-   * Gets the target word.
+   * Gets the counterpart word.
    *
-   * @returns {string} The target word.
+   * @returns {string} The counterpart word.
    */
   get counterpart() {
     return this.#counterpart
@@ -46,7 +46,7 @@ export class WordPair {
    * Checks whether a pair is equal to another pair.
    *
    * @param {WordPair} other - The pair to compare against.
-   * @returns {boolean} True if source and target both match.
+   * @returns {boolean} True if headword and counterword both match.
    */
   equals(other) {
     return this.#headword === other.#headword && this.#counterpart === other.#counterpart
