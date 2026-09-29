@@ -119,6 +119,46 @@ describe('WordPairCollection', () => {
     })
   })
 
+  describe('findPairsByTarget', () => {
+  it('should return all WordPair instances associated with a given target word', () => {
+    wordPairCollection.add(new WordPair('gift', 'poison'))
+    wordPairCollection.add(new WordPair('gift', 'married'))
+    wordPairCollection.add(new WordPair('Geschenk', 'gift'))
+
+    const pairs = wordPairCollection.findPairsByTarget('gift')
+
+    expect(pairs).toHaveLength(1)
+    expect(pairs[0].source).toBe('Geschenk')
+  })
+
+  it('should return an empty array if no pairs match the target word', () => {
+    expect(wordPairCollection.findPairsByTarget('nonexistent')).toEqual([])
+  })
+})
+
+describe('getAllSourceWords', () => {
+  it('should return all unique source words', () => {
+    wordPairCollection.add(new WordPair('gift', 'married'))
+    wordPairCollection.add(new WordPair('gift', 'poison'))
+    wordPairCollection.add(new WordPair('haus', 'hus'))
+
+    expect(wordPairCollection.getAllSourceWords()).toEqual(['gift', 'haus'])
+  })
+
+  it('should return an empty array for an empty collection', () => {
+    expect(wordPairCollection.getAllSourceWords()).toEqual([])
+  })
+})
+
+describe('getAllTargetWords', () => {
+  it('should return all unique target words', () => {
+    wordPairCollection.add(new WordPair('gift', 'married'))
+    wordPairCollection.add(new WordPair('Geschenk', 'gift'))
+
+    expect(wordPairCollection.getAllTargetWords()).toEqual(['married', 'gift'])
+  })
+})
+
   describe('getAllPairs', () => {
     it('should return an array containing all WordPair objects', () => {
       const pair1 = new WordPair('haus', 'hus')
@@ -162,6 +202,27 @@ describe('WordPairCollection', () => {
       expect(wordPairCollection.size).toBe(1)
     })
   })
+
+  describe('has', () => {
+  it('should return true when the pair exists', () => {
+    wordPairCollection.add(new WordPair('haus', 'hus'))
+    expect(wordPairCollection.has('haus', 'hus')).toBe(true)
+  })
+
+  it('should return false when the pair does not exist', () => {
+    expect(wordPairCollection.has('haus', 'hus')).toBe(false)
+  })
+
+  it('should return false when only the source matches', () => {
+    wordPairCollection.add(new WordPair('gift', 'married'))
+    expect(wordPairCollection.has('gift', 'poison')).toBe(false)
+  })
+
+  it('should return false when only the target matches', () => {
+    wordPairCollection.add(new WordPair('gift', 'married'))
+    expect(wordPairCollection.has('Geschenk', 'married')).toBe(false)
+  })
+})
 
   describe('clear', () => {
     it('should remove all word pairs', () => {
