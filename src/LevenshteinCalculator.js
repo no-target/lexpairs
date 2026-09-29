@@ -2,7 +2,6 @@
  *
  */
 export class LevenshteinCalculator {
-
   /**
    * Calculates the minimum number of single-character edits
    * needed to transform one string into another.
@@ -12,8 +11,8 @@ export class LevenshteinCalculator {
    * @returns {number} The Levenshtein edit distance.
    * @throws {TypeError} If either argument is not a string.
    */
- calculateDistance(firstText, secondText) {
-   if (typeof firstText !== 'string' || typeof secondText !== 'string') {
+  calculateDistance(firstText, secondText) {
+    if (typeof firstText !== 'string' || typeof secondText !== 'string') {
       throw new TypeError('Both arguments must be strings')
     }
 
@@ -68,14 +67,13 @@ export class LevenshteinCalculator {
    */
   #fillRow(matrix, firstText, secondText, firstIndex) {
     for (let secondIndex = 1; secondIndex <= secondText.length; secondIndex++) {
-      matrix[firstIndex][secondIndex] =
-        this.#calculateCellDistance(
-          matrix,
-          firstText,
-          secondText,
-          firstIndex,
-          secondIndex,
-        )
+      matrix[firstIndex][secondIndex] = this.#calculateCellDistance(
+        matrix,
+        firstText,
+        secondText,
+        firstIndex,
+        secondIndex
+      )
     }
   }
 
@@ -89,31 +87,17 @@ export class LevenshteinCalculator {
    * @param {number} secondIndex - The current column index.
    * @returns {number} The minimum distance for the cell.
    */
-  #calculateCellDistance(
-    matrix,
-    firstText,
-    secondText,
-    firstIndex,
-    secondIndex,
-  ) {
-    const charactersAreEqual =
-      firstText[firstIndex - 1] === secondText[secondIndex - 1]
+  #calculateCellDistance(matrix, firstText, secondText, firstIndex, secondIndex) {
+    const charactersAreEqual = firstText[firstIndex - 1] === secondText[secondIndex - 1]
 
     const substitutionCost = charactersAreEqual ? 0 : 1
 
-    const viaSubstitution =
-      matrix[firstIndex - 1][secondIndex - 1] + substitutionCost
+    const viaSubstitution = matrix[firstIndex - 1][secondIndex - 1] + substitutionCost
 
-    const viaInsertion =
-      matrix[firstIndex][secondIndex - 1] + 1
+    const viaInsertion = matrix[firstIndex][secondIndex - 1] + 1
 
-    const viaDeletion =
-      matrix[firstIndex - 1][secondIndex] + 1
+    const viaDeletion = matrix[firstIndex - 1][secondIndex] + 1
 
-    return Math.min(
-      viaSubstitution,
-      viaInsertion,
-      viaDeletion,
-    )
+    return Math.min(viaSubstitution, viaInsertion, viaDeletion)
   }
 }

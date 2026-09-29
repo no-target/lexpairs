@@ -2,23 +2,20 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { LevenshteinCalculator } from './LevenshteinCalculator.js'
 
 describe('LevenshteinDistance', () => {
-   let calculator
+  let calculator
 
   beforeEach(() => {
     calculator = new LevenshteinCalculator()
   })
 
-   describe('distance', () => {
-
-     it('should throw a TypeError when an argument is not a string', () => {
+  describe('distance', () => {
+    it('should throw a TypeError when an argument is not a string', () => {
       expect(() => calculator.calculateDistance(123, 'hus')).toThrow(TypeError)
       expect(() => calculator.calculateDistance(null, 'hus')).toThrow(TypeError)
       expect(() => calculator.calculateDistance('haus', 456)).toThrow(TypeError)
       expect(() => calculator.calculateDistance('haus', undefined)).toThrow(TypeError)
     })
-    
 
-    
     it('should return 0 for identical strings', () => {
       expect(calculator.calculateDistance('hus', 'hus')).toBe(0)
     })
@@ -43,13 +40,10 @@ describe('LevenshteinDistance', () => {
       expect(calculator.calculateDistance('kitten', 'sitting')).toBe(3)
     })
 
-    
     it('should be symmetric', () => {
       const forward = calculator.calculateDistance('kitten', 'sitting')
       const backward = calculator.calculateDistance('sitting', 'kitten')
       expect(forward).toBe(backward)
     })
   })
-
-  
 })

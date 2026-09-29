@@ -8,9 +8,10 @@ describe('FuzzyMatcher', () => {
   describe('findApproximateMatches', () => {
     it('should return words within maxDistance', () => {
       const matcher = new FuzzyMatcher(calculator, 2)
-      expect(matcher.findApproximateMatches('kitten', ['kitten', 'smitten', 'sitting', 'dog']))
-        .toEqual(['kitten', 'smitten'])
+      expect(matcher.findApproximateMatches('kitten', ['kitten', 'smitten', 'sitting', 'dog'])).toEqual([
+        'kitten',
+        'smitten',
+      ])
     })
-
   })
 })

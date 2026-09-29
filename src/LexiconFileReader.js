@@ -14,7 +14,7 @@ export class LexiconFileReader {
     this.#parser = parser
   }
 
-  async readDelimited(filePath, delimiter = ',') {
+  async readDelimited(filePath, delimiter) {
     const text = await this.#readText(filePath)
     return this.#parser.parseDelimitedText(text, delimiter)
   }

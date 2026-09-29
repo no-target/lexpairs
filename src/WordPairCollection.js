@@ -60,10 +60,8 @@ export class WordPairCollection {
    * @param {string} source - The source word to look up.
    * @returns {string[]} An array of target words that match the source.
    */
-  findTargets(source) {
-    return this.#pairs
-    .filter((pair) => pair.source === source)
-    .map((pair) => pair.target)
+  findTargetWords(source) {
+    return this.#pairs.filter((pair) => pair.source === source).map((pair) => pair.target)
   }
 
   /**
@@ -72,10 +70,8 @@ export class WordPairCollection {
    * @param {string} target - The target word to look up.
    * @returns {string[]} An array of source words that match the target.
    */
-  findSources(target) {
-    return this.#pairs
-    .filter((pair) => pair.target === target)
-    .map((pair) => pair.source)
+  findSourceWords(target) {
+    return this.#pairs.filter((pair) => pair.target === target).map((pair) => pair.source)
   }
 
   /**
@@ -84,8 +80,43 @@ export class WordPairCollection {
    * @param {string} source - The source word to search for.
    * @returns {WordPair[]} An array of WordPair objects that match the source.
    */
-  findPairs(source) {
+  findPairsBySource(source) {
     return this.#pairs.filter((pair) => pair.source === source)
+  }
+
+  /**
+   * Finds and returns all WordPair objects associated with a given target word.
+   *
+   * @param {string} source - The target word to search for.
+   * @returns {WordPair[]} An array of WordPair objects that match the target.
+   */
+  findPairsByTarget(target) {
+    return this.#pairs.filter((pair) => pair.target === target)
+  }
+
+  /**
+   * @returns {string[]} All unique source words in the collection.
+   */
+  getAllSourceWords() {
+    return [...new Set(this.#pairs.map((pair) => pair.source))]
+  }
+
+  /**
+   * @returns {string[]} All unique target words in the collection.
+   */
+  getAllTargetWords() {
+    return [...new Set(this.#pairs.map((pair) => pair.target))]
+  }
+
+/**
+ * Checks whether a specific word pair exists in the collection.
+ *
+ * @param {string} source - The source word.
+ * @param {string} target - The target word.
+ * @returns {boolean} True if the pair exists.
+ */
+  has(source, target) {
+    return this.#pairs.some((pair) => pair.source === source && pair.target === target)
   }
 
   /**
