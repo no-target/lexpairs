@@ -32,7 +32,7 @@ export class LexiconFileReader {
     try {
       return await fs.readFile(filePath, 'utf-8')
     } catch (error) {
-      if (error.code === ' ENOENT') {
+      if (error.code === 'ENOENT') {
         throw new Error(`File not found: ${filePath}`, { cause: error })
       }
       throw error
