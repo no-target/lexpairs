@@ -24,9 +24,9 @@ export class LexiconParser {
       }
 
       // Trim each field so whitespace-only fields count as empty and the line is skipped
-      const [source, target] = trimmedLine.split(delimiter).map((field) => field.trim())
-      if (source && target) {
-        pairs.push(new WordPair(source, target))
+      const [headword, counterpart] = trimmedLine.split(delimiter).map((field) => field.trim())
+      if (headword && counterpart) {
+        pairs.push(new WordPair(headword, counterpart))
       }
     }
     return pairs
@@ -37,17 +37,17 @@ export class LexiconParser {
    *
    * @param {string} text - A JSON string containing an array of objects.
    * @param {Object} keys - Names of the properties holding each word.
-   * @param {string} keys.sourceKey - Name of the property holding the source word.
-   * @param {string} keys.targetKey - Name of the property holding the target word.
+   * @param {string} keys.headwordKey - Name of the property holding the source word.
+   * @param {string} keys.counterpartKey - Name of the property holding the target word.
    * @returns {WordPair[]} The parsed word pairs.
    * @throws {TypeError} If sourceKey or targetKey is missing.
    * @throws {SyntaxError} If the text is not valid JSON.
    * @throws {TypeError} If the JSON is not an array.
    * @throws {TypeError} If an item lacks the source or target key, or the value is not a non-empty string.
    */
-  parseJson(text, { sourceKey, targetKey } = {}) {
-    if (!sourceKey || !targetKey) {
-      throw new TypeError('Both sourceKey and targetKey are required')
+  parseJson(text, { headwordKey, counterpartKey } = {}) {
+    if (!headwordKey || !counterpartKey) {
+      throw new TypeError('Both headwordKey and counterpartKey are required')
     }
 
     const data = JSON.parse(text)
@@ -56,6 +56,6 @@ export class LexiconParser {
       throw new TypeError('Expected a JSON array of objects')
     }
 
-    return data.map((item) => new WordPair(item[sourceKey], item[targetKey]))
+    return data.map((item) => new WordPair(item[headwordKey], item[counterpartKey]))
   }
 }

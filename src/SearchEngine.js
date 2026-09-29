@@ -23,82 +23,81 @@ export class SearchEngine {
     this.#distanceCalculator = distanceCalculator
   }
 
-
-
   /**
-   * Returns pairs with an exact source word.
+    * Returns pairs whose source word equals the specified word.
    *
-   * @param {string} word
+   * @param {string} headword
    * @returns {WordPair[]}
    */
-  exactSource(word) {
-    return this.#collection.findPairsBySource(word)
+  byHeadword(headword) {
+    return this.#collection.findPairsByHeadword(headword)
   }
 
-  /**
-   * Returns  pairs with an exact target word.
+/**
+   * Returns pairs whose target word equals the specified word.
    *
-   * @param {string} word
+   * @param {string} searchTerm
    * @returns {WordPair[]}
    */
-  exactTarget(word) {
-    return this.#collection.findPairsByTarget(word)
+byCounterpart(counterpart) {
+    return this.#collection.findPairsByCounterpart(counterpart)
   }
-
-
 
  /**
-   * Returns pairs whose source word is within the specified
+   * Returns pairs whose headword is within the specified
    * Levenshtein distance of the search term.
    *
    * @param {string} searchTerm
    * @param {number} maxDistance
    * @returns {WordPair[]}
    */
-  fuzzySource(searchTerm, maxDistance = 2) {
-  const normalizedSearchTerm = searchTerm.toLowerCase()
+similarHeadword(searchTerm, maxDistance) {
+  const matchingHeadwords = this.#collection
+    .getAllHeadwords()
+    .filter((headword) =>
+      this.#isWithinMaxDistance(searchTerm, headword, maxDistance),
+    )
 
-  const matchingSources = this.#collection
-    .getAllSourceWords()
-    .filter((sourceWord) => {
-      const distance = this.#distanceCalculator.calculateDistance(
-        normalizedSearchTerm,
-        sourceWord.toLowerCase(),
-      )
-
-      return distance <= maxDistance
-    })
-
-  return matchingSources.flatMap((source) =>
-    this.#collection.findPairsBySource(source),
+  return matchingHeadwords.flatMap((headword) =>
+    this.#collection.findPairsByHeadword(headword),
   )
 }
 
   /**
-   * Returns pairs whose target word is within the specified
+   * Returns pairs where its counterpart word is within the specified
    * Levenshtein distance of the search term.
    *
    * @param {string} searchTerm
    * @param {number} maxDistance
    * @returns {WordPair[]}
    */
-  fuzzyTarget(searchTerm, maxDistance = 2) {
-  const normalizedSearchTerm = searchTerm.toLowerCase()
+ similarCounterpart(searchTerm, maxDistance) {
+  const matchingCounterparts = this.#collection
+    .getAllCounterparts()
+    .filter((counterpart) =>
+      this.#isWithinMaxDistance(searchTerm, counterpart, maxDistance),
+    )
 
-  const matchingTargets = this.#collection
-    .getAllTargetWords()
-    .filter((targetWord) => {
-      const distance = this.#distanceCalculator.calculateDistance(
-        normalizedSearchTerm,
-        targetWord.toLowerCase(),
-      )
-
-      return distance <= maxDistance
-    })
-
-  return matchingTargets.flatMap((target) =>
-    this.#collection.findPairsByTarget(target),
+  return matchingCounterparts.flatMap((counterpart) =>
+    this.#collection.findPairsByCounterpart(counterpart),
   )
+}
+
+/**
+ * Checks whether two words are within the specified maximum distance.
+ *
+ * @param {string} firstTerm - The first word to compare.
+ * @param {string} secondTerm - The second word to compare.
+ * @param {number} maxDistance - The maximum allowed distance.
+ * @returns {boolean} True if the words are within the maximum distance.
+ */
+#isWithinMaxDistance(firstTerm, secondTerm, maxDistance) {
+  const distance = this.#distanceCalculator.calculateDistance(
+    firstTerm.toLowerCase(),
+    secondTerm.toLowerCase(),
+  )
+
+  return distance <= maxDistance
 }
 }
 

@@ -20,17 +20,17 @@ export class WordPairCollection {
   /**
    * Adds a new word pair to the collection.
    *
-   * @param {string} source - The source word of the pair to add.
-   * @param {string} target - The target word of the pair to add.
+   * @param {string} headword
+   * @param {string} counterpart - The associated word of the source.
    * @throws {TypeError} If the argument is not an instance of WordPair.
    * @throws {Error} If an identical word pair already exists in the collection.
    */
-  add(source, target) {
-   const pair = new WordPair(source, target)
+  add(headword, counterpart) {
+   const pair = new WordPair(headword, counterpart)
 
   if (this.#pairs.some((existingPair) => existingPair.equals(pair))) {
     throw new Error(
-      `Wordpair '${source}' -> '${target}' already exists`,
+      `Wordpair '${headword}' -> '${counterpart}' already exists`,
     )
   }
 
@@ -42,11 +42,13 @@ export class WordPairCollection {
    *
    * @param {string} source - The source word of the pair to remove.
    * @param {string} target - The target word of the pair to remove.
+   * @param headword
+   * @param counterpart
    * @returns {WordPair} The removed word pair.
    * @throws {Error} If the word pair is not found in the collection.
    */
-  remove(source, target) {
-    const index = this.#findIndex(source, target)
+  remove(headword, counterpart) {
+    const index = this.#findIndex(headword, counterpart)
     const [removed] = this.#pairs.splice(index, 1)
     return removed
   }
@@ -55,54 +57,58 @@ export class WordPairCollection {
    * Finds and returns all target words associated with a given source word.
    *
    * @param {string} source - The source word to look up.
+   * @param headword
    * @returns {string[]} An array of target words that match the source.
    */
-  findTargetWords(source) {
-    return this.#pairs.filter((pair) => pair.source === source).map((pair) => pair.target)
+  findCounterparts(headword) {
+    return this.#pairs.filter((pair) => pair.headword === headword).map((pair) => pair.counterpart)
   }
 
   /**
    * Finds and returns all source words associated with a given target word.
    *
    * @param {string} target - The target word to look up.
+   * @param counterpart
    * @returns {string[]} An array of source words that match the target.
    */
-  findSourceWords(target) {
-    return this.#pairs.filter((pair) => pair.target === target).map((pair) => pair.source)
+  findHeadwords(counterpart) {
+    return this.#pairs.filter((pair) => pair.counterpart === counterpart).map((pair) => pair.headword)
   }
 
   /**
    * Finds and returns all WordPair objects associated with a given source word.
    *
    * @param {string} source - The source word to search for.
+   * @param headword
    * @returns {WordPair[]} An array of WordPair objects that match the source.
    */
-  findPairsBySource(source) {
-    return this.#pairs.filter((pair) => pair.source === source)
+  findPairsByHeadword(headword) {
+    return this.#pairs.filter((pair) => pair.headword === headword)
   }
 
   /**
    * Finds and returns all WordPair objects associated with a given target word.
    *
-   * @param {string} source - The target word to search for.
+   * @param {string} - The target word to search for.
+   * @param counterpart
    * @returns {WordPair[]} An array of WordPair objects that match the target.
    */
-  findPairsByTarget(target) {
-    return this.#pairs.filter((pair) => pair.target === target)
+  findPairsByCounterpart(counterpart) {
+    return this.#pairs.filter((pair) => pair.counterpart === counterpart)
   }
 
   /**
    * @returns {string[]} All unique source words in the collection.
    */
-  getAllSourceWords() {
-    return [...new Set(this.#pairs.map((pair) => pair.source))]
+  getAllHeadwords() {
+    return [...new Set(this.#pairs.map((pair) => pair.headword))]
   }
 
   /**
    * @returns {string[]} All unique target words in the collection.
    */
-  getAllTargetWords() {
-    return [...new Set(this.#pairs.map((pair) => pair.target))]
+  getAllCounterparts() {
+    return [...new Set(this.#pairs.map((pair) => pair.counterpart))]
   }
 
 /**
@@ -110,10 +116,12 @@ export class WordPairCollection {
  *
  * @param {string} source - The source word.
  * @param {string} target - The target word.
+ * @param headword
+ * @param counterpart
  * @returns {boolean} True if the pair exists.
  */
-  has(source, target) {
-    return this.#pairs.some((pair) => pair.source === source && pair.target === target)
+  has(headword, counterpart) {
+    return this.#pairs.some((pair) => pair.headword === headword && pair.counterpart === counterpart)
   }
 
   /**
@@ -146,13 +154,15 @@ export class WordPairCollection {
    *
    * @param {string} source - The source word to search for.
    * @param {string} target - The target word to search for.
+   * @param headword
+   * @param counterpart
    * @returns {number} The index of the word pair in the internal array.
    * @throws {Error} If the word pair is not found in the collection.
    */
-  #findIndex(source, target) {
-    const index = this.#pairs.findIndex((pair) => pair.source === source && pair.target === target)
+  #findIndex(headword, counterpart) {
+    const index = this.#pairs.findIndex((pair) => pair.headword === headword && pair.counterpart === counterpart)
     if (index === -1) {
-      throw new Error(`Wordpair '${source}' -> '${target}' not found`)
+      throw new Error(`Wordpair '${headword}' -> '${counterpart}' not found`)
     }
     return index
   }

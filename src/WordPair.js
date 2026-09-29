@@ -2,26 +2,26 @@
  * Represents a pair of related words.
  */
 export class WordPair {
-  #source
-  #target
+  #headword
+  #counterpart
 
   /**
    * Creates a new word pair.
    *
-   * @param {string} source - The word used as the starting point of the pair.
-   * @param {string} target - The word associated with the source word.
+   * @param {string} headword - The word used as the starting point of the pair.
+   * @param {string} counterpart - The word associated with the headword.
    */
-  constructor(source, target) {
-    if (typeof source !== 'string' || source.trim() === '') {
-      throw new TypeError('Source word must be a non-empty string')
+  constructor(headword, counterpart) {
+    if (typeof headword !== 'string' || headword.trim() === '') {
+      throw new TypeError('Headword must be a non-empty string')
     }
 
-    if (typeof target !== 'string' || target.trim() === '') {
-      throw new TypeError('Target word  must be a non-empty string')
+    if (typeof counterpart !== 'string' || counterpart.trim() === '') {
+      throw new TypeError('Counterpart must be a non-empty string')
     }
 
-    this.#source = source.trim()
-    this.#target = target.trim()
+    this.#headword = headword.trim()
+    this.#counterpart = counterpart.trim()
   }
 
   /**
@@ -29,8 +29,8 @@ export class WordPair {
    *
    * @returns {string} The source word.
    */
-  get source() {
-    return this.#source
+  get headword() {
+    return this.#headword
   }
 
   /**
@@ -38,8 +38,8 @@ export class WordPair {
    *
    * @returns {string} The target word.
    */
-  get target() {
-    return this.#target
+  get counterpart() {
+    return this.#counterpart
   }
 
   /**
@@ -49,6 +49,6 @@ export class WordPair {
    * @returns {boolean} True if source and target both match.
    */
   equals(other) {
-    return this.#source === other.source && this.#target === other.target
+    return this.#headword === other.#headword && this.#counterpart === other.#counterpart
   }
 }

@@ -21,7 +21,7 @@ describe('WordPairCollection', () => {
       expect(wordPairCollection.size).toBe(1)
     })
 
-it('should throw a TypeError when source is not a string', () => {
+it('should throw a TypeError when headword is not a string', () => {
   expect(() => wordPairCollection.add(123, 'hus')).toThrow(TypeError)
 })
 
@@ -34,7 +34,7 @@ it('should throw a TypeError when target is not a string', () => {
       expect(() => wordPairCollection.add('gift', 'poison')).toThrow()
     })
 
-    it('should allow multiple different translations for the same source word', () => {
+    it('should allow multiple different translations for the same headword', () => {
       wordPairCollection.add('gift', 'married')
       wordPairCollection.add('gift', 'poison')
 
@@ -48,8 +48,8 @@ it('should throw a TypeError when target is not a string', () => {
 
       const removed = wordPairCollection.remove('haus', 'hus')
 
-      expect(removed.source).toBe('haus')
-      expect(removed.target).toBe('hus')
+      expect(removed.headword).toBe('haus')
+      expect(removed.counterpart).toBe('hus')
       expect(wordPairCollection.size).toBe(0)
     })
 
@@ -64,94 +64,94 @@ it('should throw a TypeError when target is not a string', () => {
       wordPairCollection.remove('gift', 'poison')
 
       expect(wordPairCollection.size).toBe(1)
-      expect(wordPairCollection.findTargetWords('gift')).toEqual(['married'])
+      expect(wordPairCollection.findCounterparts('gift')).toEqual(['married'])
     })
   })
 
   describe('findTargetWords', () => {
-    it('should return all target words associated with a given source word', () => {
+    it('should return all counterparts associated with a given headword', () => {
       wordPairCollection.add('gift', 'married')
       wordPairCollection.add('gift', 'poison')
 
-      expect(wordPairCollection.findTargetWords('gift')).toEqual(['married', 'poison'])
+      expect(wordPairCollection.findCounterparts('gift')).toEqual(['married', 'poison'])
     })
 
-    it('should return an empty array if the source word is not found', () => {
-      expect(wordPairCollection.findTargetWords('nonexistent')).toEqual([])
+    it('should return an empty array if the headword is not found', () => {
+      expect(wordPairCollection.findCounterparts('nonexistent')).toEqual([])
     })
   })
 
   describe('findSourceWords', () => {
-    it('should return all source words associated with a given target word', () => {
+    it('should return all headwords associated with a given counterpart', () => {
       wordPairCollection.add('schlafen', 'sova')
       wordPairCollection.add('pennen', 'sova')
 
-      expect(wordPairCollection.findSourceWords('sova')).toEqual(['schlafen', 'pennen'])
+      expect(wordPairCollection.findHeadwords('sova')).toEqual(['schlafen', 'pennen'])
     })
 
     it('should return an empty array if the target word is not found', () => {
-      expect(wordPairCollection.findSourceWords('nonexistent')).toEqual([])
+      expect(wordPairCollection.findHeadwords('nonexistent')).toEqual([])
     })
   })
 
-  describe('findPairsBySource', () => {
-    it('should return all WordPair instances associated with a given source word', () => {
+  describe('findPairsByHeadword', () => {
+    it('should return all WordPair instances associated with a given headword', () => {
       wordPairCollection.add('gift', 'married')
       wordPairCollection.add('gift', 'poison')
 
-      const pairs = wordPairCollection.findPairsBySource('gift')
+      const pairs = wordPairCollection.findPairsByHeadword('gift')
 
       expect(pairs).toHaveLength(2)
       expect(pairs.every((pair) => pair instanceof WordPair)).toBe(true)
-      expect(pairs.map((p) => p.target)).toEqual(['married', 'poison'])
+      expect(pairs.map((p) => p.counterpart)).toEqual(['married', 'poison'])
     })
 
-    it('should return an empty array if no pairs match the source word', () => {
-      expect(wordPairCollection.findPairsBySource('nonexistent')).toEqual([])
+    it('should return an empty array if no pairs match the headword', () => {
+      expect(wordPairCollection.findPairsByHeadword('nonexistent')).toEqual([])
     })
   })
 
   describe('findPairsByTarget', () => {
-  it('should return all WordPair instances associated with a given target word', () => {
+  it('should return all WordPair instances associated with a given counterpart', () => {
     wordPairCollection.add('gift', 'poison')
     wordPairCollection.add('gift', 'married')
     wordPairCollection.add('Geschenk', 'gift')
 
-    const pairs = wordPairCollection.findPairsByTarget('gift')
+    const pairs = wordPairCollection.findPairsByCounterpart('gift')
 
     expect(pairs).toHaveLength(1)
-    expect(pairs[0].source).toBe('Geschenk')
+    expect(pairs[0].headword).toBe('Geschenk')
   })
 
   it('should return an empty array if no pairs match the target word', () => {
-    expect(wordPairCollection.findPairsByTarget('nonexistent')).toEqual([])
+    expect(wordPairCollection.findPairsByCounterpart('nonexistent')).toEqual([])
   })
 })
 
-describe('getAllSourceWords', () => {
+describe('getAllHeadwords', () => {
   it('should return all unique source words', () => {
     wordPairCollection.add('gift', 'married')
     wordPairCollection.add('gift', 'poison')
     wordPairCollection.add('haus', 'hus')
 
-    expect(wordPairCollection.getAllSourceWords()).toEqual(['gift', 'haus'])
+    expect(wordPairCollection.getAllHeadwords()).toEqual(['gift', 'haus'])
   })
 
   it('should return an empty array for an empty collection', () => {
-    expect(wordPairCollection.getAllSourceWords()).toEqual([])
+    expect(wordPairCollection.getAllHeadwords()).toEqual([])
   })
 })
 
-describe('getAllTargetWords', () => {
+describe('getAllTCounterparts', () => {
   it('should return all unique target words', () => {
     wordPairCollection.add('gift', 'married')
     wordPairCollection.add('Geschenk', 'gift')
 
-    expect(wordPairCollection.getAllTargetWords()).toEqual(['married', 'gift'])
+    expect(wordPairCollection.getAllCounterparts()).toEqual(['married', 'gift'])
   })
 
   it('should return an empty array for an empty collection', () => {
-  expect(wordPairCollection.getAllTargetWords()).toEqual([])
+  expect(wordPairCollection.getAllCounterparts()).toEqual([])
 })
 })
 
