@@ -9,6 +9,7 @@ export class FuzzyMatcher {
   /**
    *
    * @param distanceCalculator
+   * @param maxDistance
    */
   constructor(distanceCalculator, maxDistance) {
     this.#distanceCalculator = distanceCalculator
@@ -23,8 +24,19 @@ export class FuzzyMatcher {
    */
   findApproximateMatches(searchTerm, words) {
     return words.filter((word) => {
-      const distance = this.#distanceCalculator(searchTerm, word)
-      return distance <= this.#maxDistance
+      this.isSimilar(searchTerm, word)
     })
   }
+
+/**
+ *
+ * @param firstWord
+ * @param secondWord
+ */
+isSimilar(firstWord, secondWord) {
+  const distance = this.#distanceCalculator(firstWord, secondWord)
+
+  return distance <= this.#maxDistance
+}
+
 }
