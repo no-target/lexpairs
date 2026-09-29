@@ -12,7 +12,7 @@ export class LevenshteinCalculator {
    * @returns {number} The Levenshtein edit distance.
    * @throws {TypeError} If either argument is not a string.
    */
- distance(firstText, secondText) {
+ calculateDistance(firstText, secondText) {
    if (typeof firstText !== 'string' || typeof secondText !== 'string') {
       throw new TypeError('Both arguments must be strings')
     }
