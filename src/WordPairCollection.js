@@ -1,13 +1,13 @@
 import { WordPair } from './WordPair'
 
 /**
- * Represents a Lexicon that stores unique WordPairs.
+ * Represents a collection that stores unique WordPairs.
  */
 export class WordPairCollection {
   #pairs
 
   /**
-   * Creates a new instance of Lexicon.
+   * Creates a new instance of WordpairCollection.
    *
    * @param {WordPair[]} [initialPairs=[]] - An optional array of WordPair objects.
    * @throws {TypeError} If any element in initialPairs is not an instance of WordPair.
@@ -22,11 +22,11 @@ export class WordPairCollection {
   }
 
   /**
-   * Adds a new word pair to the lexicon.
+   * Adds a new word pair to the collection.
    *
    * @param {WordPair} pair - The word pair to add.
    * @throws {TypeError} If the argument is not an instance of WordPair.
-   * @throws {Error} If an identical word pair already exists in the lexicon.
+   * @throws {Error} If an identical word pair already exists in the collection.
    */
   add(pair) {
     if (!(pair instanceof WordPair)) {
@@ -46,7 +46,7 @@ export class WordPairCollection {
    * @param {string} source - The source word of the pair to remove.
    * @param {string} target - The target word of the pair to remove.
    * @returns {WordPair} The removed word pair.
-   * @throws {Error} If the word pair is not found in the lexicon.
+   * @throws {Error} If the word pair is not found in the collection.
    */
   remove(source, target) {
     const index = this.#findIndex(source, target)
@@ -89,7 +89,7 @@ export class WordPairCollection {
   }
 
   /**
-   * Gets the total number of word pairs in the lexicon.
+   * Gets the total number of word pairs in the collection.
    *
    * @returns {number} The number of word pairs.
    */
@@ -98,7 +98,7 @@ export class WordPairCollection {
   }
 
   /**
-   * Returns a shallow copy of all WordPair objects in the lexicon.
+   * Returns a shallow copy of all WordPair objects in the collection.
    *
    * @returns {WordPair[]} An array containing all WordPair objects.
    */
@@ -107,7 +107,7 @@ export class WordPairCollection {
   }
 
   /**
-   * Clears all word pairs from the lexicon.
+   * Clears all word pairs from the collection.
    */
   clear() {
     this.#pairs = []
@@ -119,7 +119,7 @@ export class WordPairCollection {
    * @param {string} source - The source word to search for.
    * @param {string} target - The target word to search for.
    * @returns {number} The index of the word pair in the internal array.
-   * @throws {Error} If the word pair is not found in the lexicon.
+   * @throws {Error} If the word pair is not found in the collection.
    */
   #findIndex(source, target) {
     const index = this.#pairs.findIndex((pair) => pair.source === source && pair.target === target)
@@ -130,7 +130,7 @@ export class WordPairCollection {
   }
 
   /**
-   * Allows iteration over all WordPair objects in the lexicon.
+   * Allows iteration over all WordPair objects in the collection.
    *
    * @returns {IterableIterator<WordPair>}
    */
