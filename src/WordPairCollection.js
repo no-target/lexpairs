@@ -26,15 +26,13 @@ export class WordPairCollection {
    * @throws {Error} If an identical word pair already exists in the collection.
    */
   add(headword, counterpart) {
-   const pair = new WordPair(headword, counterpart)
+    const pair = new WordPair(headword, counterpart)
 
-  if (this.#pairs.some((existingPair) => existingPair.equals(pair))) {
-    throw new Error(
-      `Wordpair '${headword}' -> '${counterpart}' already exists`,
-    )
-  }
+    if (this.#pairs.some((existingPair) => existingPair.equals(pair))) {
+      throw new Error(`Wordpair '${headword}' -> '${counterpart}' already exists`)
+    }
 
-  this.#pairs.push(pair)
+    this.#pairs.push(pair)
   }
 
   /**
@@ -100,26 +98,26 @@ export class WordPairCollection {
   /**
    * @returns {string[]} All unique source words in the collection.
    */
-  getAllHeadwords() {
+  get allHeadwords() {
     return [...new Set(this.#pairs.map((pair) => pair.headword))]
   }
 
   /**
    * @returns {string[]} All unique target words in the collection.
    */
-  getAllCounterparts() {
+  get allCounterparts() {
     return [...new Set(this.#pairs.map((pair) => pair.counterpart))]
   }
 
-/**
- * Checks whether a specific word pair exists in the collection.
- *
- * @param {string} source - The source word.
- * @param {string} target - The target word.
- * @param headword
- * @param counterpart
- * @returns {boolean} True if the pair exists.
- */
+  /**
+   * Checks whether a specific word pair exists in the collection.
+   *
+   * @param {string} source - The source word.
+   * @param {string} target - The target word.
+   * @param headword
+   * @param counterpart
+   * @returns {boolean} True if the pair exists.
+   */
   has(headword, counterpart) {
     return this.#pairs.some((pair) => pair.headword === headword && pair.counterpart === counterpart)
   }
@@ -138,7 +136,7 @@ export class WordPairCollection {
    *
    * @returns {WordPair[]} An array containing all WordPair objects.
    */
-  getAllPairs() {
+  get allPairs() {
     return [...this.#pairs]
   }
 

@@ -36,12 +36,12 @@ export class Lexicon {
    * @param delimiter
    */
   async loadFromFile(filePath, delimiter) {
-    const wordPairs = await this.#fileReader.readDelimited(filePath, delimiter)
+ const wordPairs = await this.#fileReader.readDelimited(filePath, delimiter)
 
-    for (const pair of wordPairs) {
-      this.#lexicon.add(pair)
-    }
+  for (const pair of wordPairs) {
+    this.#lexicon.add(pair.headword, pair.counterpart)
   }
+}
 
   /**
    *
@@ -49,11 +49,11 @@ export class Lexicon {
    * @param keys
    */
   async loadFromJson(filePath, keys) {
-    const wordPairs = await this.#fileReader.readJson(filePath, keys)
+   const wordPairs = await this.#fileReader.readJson(filePath, keys)
 
-    for (const pair of wordPairs) {
-      this.#lexicon.add(pair)
-    }
+  for (const pair of wordPairs) {
+    this.#lexicon.add(pair.headword, pair.counterpart)
+  }
   }
 
     /**
@@ -76,14 +76,7 @@ export class Lexicon {
     return this.#lexicon.remove(headword, counterpart)
   }
 
-  /**
-   * @returns {number} The number of pairs in the lexicon.
-   */
-  get size() {
-    return this.#lexicon.size
-  }
-
-    /**
+      /**
      * @param {string} headword
      * @param {string} counterpart
      * @returns {boolean} True if the pair exists.
@@ -92,17 +85,41 @@ export class Lexicon {
     return this.#lexicon.has(headword, counterpart)
   }
 
-    /**
-     * @returns {WordPair[]} A copy of all word pairs.
-     */
-  getAllPairs() {
-    return this.#lexicon.getAllPairs()
-  }
 
-  /**
+    /**
    * Removes all word pairs in the lexicon.
    */
   clear() {
     this.#lexicon.clear()
   }
+
+
+  /**
+   * @returns {number} The number of pairs in the lexicon.
+   */
+  get size() {
+    return this.#lexicon.size
+  }
+
+    /**
+     * @returns {WordPair[]} A copy of all word pairs.
+     */
+  get allPairs() {
+    return this.#lexicon.allPairs
+  }
+
+  /**
+   *
+   */
+  get allHeadwords() {
+  return this.#lexicon.allHeadwords
+}
+
+/**
+ *
+ */
+get allCounterparts() {
+  return this.#lexicon.allCounterparts
+}
+
 }

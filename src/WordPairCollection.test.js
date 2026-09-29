@@ -21,13 +21,13 @@ describe('WordPairCollection', () => {
       expect(wordPairCollection.size).toBe(1)
     })
 
-it('should throw a TypeError when headword is not a string', () => {
-  expect(() => wordPairCollection.add(123, 'hus')).toThrow(TypeError)
-})
+    it('should throw a TypeError when headword is not a string', () => {
+      expect(() => wordPairCollection.add(123, 'hus')).toThrow(TypeError)
+    })
 
-it('should throw a TypeError when target is not a string', () => {
-  expect(() => wordPairCollection.add('haus', 123)).toThrow(TypeError)
-})
+    it('should throw a TypeError when target is not a string', () => {
+      expect(() => wordPairCollection.add('haus', 123)).toThrow(TypeError)
+    })
 
     it('should throw when adding an identical pair twice', () => {
       wordPairCollection.add('gift', 'poison')
@@ -112,59 +112,56 @@ it('should throw a TypeError when target is not a string', () => {
   })
 
   describe('findPairsByTarget', () => {
-  it('should return all WordPair instances associated with a given counterpart', () => {
-    wordPairCollection.add('gift', 'poison')
-    wordPairCollection.add('gift', 'married')
-    wordPairCollection.add('Geschenk', 'gift')
+    it('should return all WordPair instances associated with a given counterpart', () => {
+      wordPairCollection.add('gift', 'poison')
+      wordPairCollection.add('gift', 'married')
+      wordPairCollection.add('Geschenk', 'gift')
 
-    const pairs = wordPairCollection.findPairsByCounterpart('gift')
+      const pairs = wordPairCollection.findPairsByCounterpart('gift')
 
-    expect(pairs).toHaveLength(1)
-    expect(pairs[0].headword).toBe('Geschenk')
+      expect(pairs).toHaveLength(1)
+      expect(pairs[0].headword).toBe('Geschenk')
+    })
+
+    it('should return an empty array if no pairs match the target word', () => {
+      expect(wordPairCollection.findPairsByCounterpart('nonexistent')).toEqual([])
+    })
   })
 
-  it('should return an empty array if no pairs match the target word', () => {
-    expect(wordPairCollection.findPairsByCounterpart('nonexistent')).toEqual([])
-  })
-})
+  describe('getAllHeadwords', () => {
+    it('should return all unique source words', () => {
+      wordPairCollection.add('gift', 'married')
+      wordPairCollection.add('gift', 'poison')
+      wordPairCollection.add('haus', 'hus')
 
-describe('getAllHeadwords', () => {
-  it('should return all unique source words', () => {
-    wordPairCollection.add('gift', 'married')
-    wordPairCollection.add('gift', 'poison')
-    wordPairCollection.add('haus', 'hus')
+      expect(wordPairCollection.getAllHeadwords()).toEqual(['gift', 'haus'])
+    })
 
-    expect(wordPairCollection.getAllHeadwords()).toEqual(['gift', 'haus'])
-  })
-
-  it('should return an empty array for an empty collection', () => {
-    expect(wordPairCollection.getAllHeadwords()).toEqual([])
-  })
-})
-
-describe('getAllTCounterparts', () => {
-  it('should return all unique target words', () => {
-    wordPairCollection.add('gift', 'married')
-    wordPairCollection.add('Geschenk', 'gift')
-
-    expect(wordPairCollection.getAllCounterparts()).toEqual(['married', 'gift'])
+    it('should return an empty array for an empty collection', () => {
+      expect(wordPairCollection.getAllHeadwords()).toEqual([])
+    })
   })
 
-  it('should return an empty array for an empty collection', () => {
-  expect(wordPairCollection.getAllCounterparts()).toEqual([])
-})
-})
+  describe('getAllTCounterparts', () => {
+    it('should return all unique target words', () => {
+      wordPairCollection.add('gift', 'married')
+      wordPairCollection.add('Geschenk', 'gift')
+
+      expect(wordPairCollection.getAllCounterparts()).toEqual(['married', 'gift'])
+    })
+
+    it('should return an empty array for an empty collection', () => {
+      expect(wordPairCollection.getAllCounterparts()).toEqual([])
+    })
+  })
 
   describe('getAllPairs', () => {
-   it('should return an array containing all WordPair objects', () => {
-    wordPairCollection.add('haus', 'hus')
-    wordPairCollection.add('katze', 'katt')
+    it('should return an array containing all WordPair objects', () => {
+      wordPairCollection.add('haus', 'hus')
+      wordPairCollection.add('katze', 'katt')
 
-    expect(wordPairCollection.getAllPairs()).toEqual([
-      new WordPair('haus', 'hus'),
-      new WordPair('katze', 'katt'),
-    ])
-  })
+      expect(wordPairCollection.getAllPairs()).toEqual([new WordPair('haus', 'hus'), new WordPair('katze', 'katt')])
+    })
 
     it('should protect internal state against external array mutations', () => {
       wordPairCollection.add('haus', 'hus')
@@ -201,25 +198,25 @@ describe('getAllTCounterparts', () => {
   })
 
   describe('has', () => {
-  it('should return true when the pair exists', () => {
-    wordPairCollection.add('haus', 'hus')
-    expect(wordPairCollection.has('haus', 'hus')).toBe(true)
-  })
+    it('should return true when the pair exists', () => {
+      wordPairCollection.add('haus', 'hus')
+      expect(wordPairCollection.has('haus', 'hus')).toBe(true)
+    })
 
-  it('should return false when the pair does not exist', () => {
-    expect(wordPairCollection.has('haus', 'hus')).toBe(false)
-  })
+    it('should return false when the pair does not exist', () => {
+      expect(wordPairCollection.has('haus', 'hus')).toBe(false)
+    })
 
-  it('should return false when only the source matches', () => {
-    wordPairCollection.add('gift', 'married')
-    expect(wordPairCollection.has('gift', 'poison')).toBe(false)
-  })
+    it('should return false when only the source matches', () => {
+      wordPairCollection.add('gift', 'married')
+      expect(wordPairCollection.has('gift', 'poison')).toBe(false)
+    })
 
-  it('should return false when only the target matches', () => {
-    wordPairCollection.add('gift', 'married')
-    expect(wordPairCollection.has('Geschenk', 'married')).toBe(false)
+    it('should return false when only the target matches', () => {
+      wordPairCollection.add('gift', 'married')
+      expect(wordPairCollection.has('Geschenk', 'married')).toBe(false)
+    })
   })
-})
 
   describe('clear', () => {
     it('should remove all word pairs', () => {
@@ -242,10 +239,7 @@ describe('getAllTCounterparts', () => {
         iterated.push(pair)
       }
 
-          expect(iterated).toEqual([
-      new WordPair('haus', 'hus'),
-      new WordPair('katze', 'katt'),
-    ])
+      expect(iterated).toEqual([new WordPair('haus', 'hus'), new WordPair('katze', 'katt')])
     })
 
     it('should allow spreading the collection into an array using [...lexicon]', () => {
