@@ -134,11 +134,11 @@ describe('WordPairCollection', () => {
       wordPairCollection.add('gift', 'poison')
       wordPairCollection.add('haus', 'hus')
 
-      expect(wordPairCollection.getAllHeadwords()).toEqual(['gift', 'haus'])
+      expect(wordPairCollection.allHeadwords).toEqual(['gift', 'haus'])
     })
 
     it('should return an empty array for an empty collection', () => {
-      expect(wordPairCollection.getAllHeadwords()).toEqual([])
+      expect(wordPairCollection.allHeadwords).toEqual([])
     })
   })
 
@@ -147,11 +147,11 @@ describe('WordPairCollection', () => {
       wordPairCollection.add('gift', 'married')
       wordPairCollection.add('Geschenk', 'gift')
 
-      expect(wordPairCollection.getAllCounterparts()).toEqual(['married', 'gift'])
+      expect(wordPairCollection.allCounterparts).toEqual(['married', 'gift'])
     })
 
     it('should return an empty array for an empty collection', () => {
-      expect(wordPairCollection.getAllCounterparts()).toEqual([])
+      expect(wordPairCollection.allCounterparts).toEqual([])
     })
   })
 
@@ -160,12 +160,12 @@ describe('WordPairCollection', () => {
       wordPairCollection.add('haus', 'hus')
       wordPairCollection.add('katze', 'katt')
 
-      expect(wordPairCollection.getAllPairs()).toEqual([new WordPair('haus', 'hus'), new WordPair('katze', 'katt')])
+      expect(wordPairCollection.allPairs).toEqual([new WordPair('haus', 'hus'), new WordPair('katze', 'katt')])
     })
 
     it('should protect internal state against external array mutations', () => {
       wordPairCollection.add('haus', 'hus')
-      const copy = wordPairCollection.getAllPairs()
+      const copy = wordPairCollection.allPairs
 
       copy.pop()
 

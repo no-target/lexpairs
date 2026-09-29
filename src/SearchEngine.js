@@ -42,25 +42,24 @@ export class SearchEngine {
   }
 
   /**
- * Returns all counterparts associated with the specified headword.
- *
- * @param {string} headword
- * @returns {string[]}
- */
-findCounterparts(headword) {
-  return this.#collection.findCounterparts(headword)
-}
+   * Returns all counterparts associated with the specified headword.
+   *
+   * @param {string} headword
+   * @returns {string[]}
+   */
+  findCounterparts(headword) {
+    return this.#collection.findCounterparts(headword)
+  }
 
-/**
- * Returns all headwords associated with the specified counterpart.
- *
- * @param {string} counterpart
- * @returns {string[]}
- */
-findHeadwords(counterpart) {
-  return this.#collection.findHeadwords(counterpart)
-}
-
+  /**
+   * Returns all headwords associated with the specified counterpart.
+   *
+   * @param {string} counterpart
+   * @returns {string[]}
+   */
+  findHeadwords(counterpart) {
+    return this.#collection.findHeadwords(counterpart)
+  }
 
   /**
    * Returns pairs whose headword is within the specified
@@ -71,9 +70,9 @@ findHeadwords(counterpart) {
    * @returns {WordPair[]}
    */
   similarHeadword(searchTerm, maxDistance) {
-    const matchingHeadwords = this.#collection
-      .allHeadwords
-      .filter((headword) => this.#isWithinMaxDistance(searchTerm, headword, maxDistance))
+    const matchingHeadwords = this.#collection.allHeadwords.filter((headword) =>
+      this.#isWithinMaxDistance(searchTerm, headword, maxDistance)
+    )
 
     return matchingHeadwords.flatMap((headword) => this.#collection.findPairsByHeadword(headword))
   }
@@ -87,9 +86,9 @@ findHeadwords(counterpart) {
    * @returns {WordPair[]}
    */
   similarCounterpart(searchTerm, maxDistance) {
-    const matchingCounterparts = this.#collection
-      .allCounterparts
-      .filter((counterpart) => this.#isWithinMaxDistance(searchTerm, counterpart, maxDistance))
+    const matchingCounterparts = this.#collection.allCounterparts.filter((counterpart) =>
+      this.#isWithinMaxDistance(searchTerm, counterpart, maxDistance)
+    )
 
     return matchingCounterparts.flatMap((counterpart) => this.#collection.findPairsByCounterpart(counterpart))
   }
