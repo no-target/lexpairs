@@ -4,6 +4,7 @@ import { WordPairCollection } from './WordPairCollection'
 export class Lexicon {
   #lexicon
   #fileReader
+  #search
 
   constructor() {
     this.#lexicon = new WordPairCollection()
