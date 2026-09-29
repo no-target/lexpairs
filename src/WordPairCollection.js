@@ -13,31 +13,28 @@ export class WordPairCollection {
    * @throws {TypeError} If any element in initialPairs is not an instance of WordPair.
    * @throws {Error} If initialPairs contains duplicate word pairs.
    */
-  constructor(initialPairs = []) {
+  constructor() {
     this.#pairs = []
-
-    for (const pair of initialPairs) {
-      this.add(pair)
-    }
   }
 
   /**
    * Adds a new word pair to the collection.
    *
-   * @param {WordPair} pair - The word pair to add.
+   * @param {string} source - The source word of the pair to add.
+   * @param {string} target - The target word of the pair to add.
    * @throws {TypeError} If the argument is not an instance of WordPair.
    * @throws {Error} If an identical word pair already exists in the collection.
    */
-  add(pair) {
-    if (!(pair instanceof WordPair)) {
-      throw new TypeError('Expected a WordPair')
-    }
+  add(source, target) {
+   const pair = new WordPair(source, target)
 
-    if (this.#pairs.some((existingPair) => existingPair.equals(pair))) {
-      throw new Error(`Wordpair '${pair.source}' -> '${pair.target}' already exists`)
-    }
+  if (this.#pairs.some((existingPair) => existingPair.equals(pair))) {
+    throw new Error(
+      `Wordpair '${source}' -> '${target}' already exists`,
+    )
+  }
 
-    this.#pairs.push(pair)
+  this.#pairs.push(pair)
   }
 
   /**

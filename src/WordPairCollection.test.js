@@ -10,41 +10,33 @@ describe('WordPairCollection', () => {
   })
 
   describe('constructor', () => {
-    it('should create an empty lexicon by default', () => {
+    it('should create an empty collection by default', () => {
       expect(wordPairCollection.size).toBe(0)
-    })
-
-    it('should accept an array of initial pairs', () => {
-      const initial = [new WordPair('haus', 'hus'), new WordPair('katze', 'katt')]
-      const populated = new WordPairCollection(initial)
-
-      expect(populated.size).toBe(2)
-    })
-
-    it('should throw if initial pairs contain an invalid item', () => {
-      expect(() => new WordPairCollection(['not a word pair'])).toThrow(TypeError)
     })
   })
 
   describe('add', () => {
     it('should add a word pair to collection', () => {
-      wordPairCollection.add(new WordPair('haus', 'hus'))
+      wordPairCollection.add('haus', 'hus')
       expect(wordPairCollection.size).toBe(1)
     })
 
-    it('should throw a TypeError when argument is not a WordPair', () => {
-      expect(() => wordPairCollection.add('haus')).toThrow(TypeError)
-      expect(() => wordPairCollection.add({ source: 'haus', target: 'hus' })).toThrow(TypeError)
-    })
+it('should throw a TypeError when source is not a string', () => {
+  expect(() => wordPairCollection.add(123, 'hus')).toThrow(TypeError)
+})
+
+it('should throw a TypeError when target is not a string', () => {
+  expect(() => wordPairCollection.add('haus', 123)).toThrow(TypeError)
+})
 
     it('should throw when adding an identical pair twice', () => {
-      wordPairCollection.add(new WordPair('gift', 'poison'))
-      expect(() => wordPairCollection.add(new WordPair('gift', 'poison'))).toThrow()
+      wordPairCollection.add('gift', 'poison')
+      expect(() => wordPairCollection.add('gift', 'poison')).toThrow()
     })
 
     it('should allow multiple different translations for the same source word', () => {
-      wordPairCollection.add(new WordPair('gift', 'married'))
-      wordPairCollection.add(new WordPair('gift', 'poison'))
+      wordPairCollection.add('gift', 'married')
+      wordPairCollection.add('gift', 'poison')
 
       expect(wordPairCollection.size).toBe(2)
     })
@@ -52,7 +44,7 @@ describe('WordPairCollection', () => {
 
   describe('remove', () => {
     it('should remove an existing pair and return it', () => {
-      wordPairCollection.add(new WordPair('haus', 'hus'))
+      wordPairCollection.add('haus', 'hus')
 
       const removed = wordPairCollection.remove('haus', 'hus')
 
@@ -66,8 +58,8 @@ describe('WordPairCollection', () => {
     })
 
     it('should not remove a pair when only the source matches', () => {
-      wordPairCollection.add(new WordPair('gift', 'married'))
-      wordPairCollection.add(new WordPair('gift', 'poison'))
+      wordPairCollection.add('gift', 'married')
+      wordPairCollection.add('gift', 'poison')
 
       wordPairCollection.remove('gift', 'poison')
 
@@ -78,8 +70,8 @@ describe('WordPairCollection', () => {
 
   describe('findTargetWords', () => {
     it('should return all target words associated with a given source word', () => {
-      wordPairCollection.add(new WordPair('gift', 'married'))
-      wordPairCollection.add(new WordPair('gift', 'poison'))
+      wordPairCollection.add('gift', 'married')
+      wordPairCollection.add('gift', 'poison')
 
       expect(wordPairCollection.findTargetWords('gift')).toEqual(['married', 'poison'])
     })
@@ -91,8 +83,8 @@ describe('WordPairCollection', () => {
 
   describe('findSourceWords', () => {
     it('should return all source words associated with a given target word', () => {
-      wordPairCollection.add(new WordPair('schlafen', 'sova'))
-      wordPairCollection.add(new WordPair('pennen', 'sova'))
+      wordPairCollection.add('schlafen', 'sova')
+      wordPairCollection.add('pennen', 'sova')
 
       expect(wordPairCollection.findSourceWords('sova')).toEqual(['schlafen', 'pennen'])
     })
@@ -104,8 +96,8 @@ describe('WordPairCollection', () => {
 
   describe('findPairsBySource', () => {
     it('should return all WordPair instances associated with a given source word', () => {
-      wordPairCollection.add(new WordPair('gift', 'married'))
-      wordPairCollection.add(new WordPair('gift', 'poison'))
+      wordPairCollection.add('gift', 'married')
+      wordPairCollection.add('gift', 'poison')
 
       const pairs = wordPairCollection.findPairsBySource('gift')
 
@@ -121,9 +113,9 @@ describe('WordPairCollection', () => {
 
   describe('findPairsByTarget', () => {
   it('should return all WordPair instances associated with a given target word', () => {
-    wordPairCollection.add(new WordPair('gift', 'poison'))
-    wordPairCollection.add(new WordPair('gift', 'married'))
-    wordPairCollection.add(new WordPair('Geschenk', 'gift'))
+    wordPairCollection.add('gift', 'poison')
+    wordPairCollection.add('gift', 'married')
+    wordPairCollection.add('Geschenk', 'gift')
 
     const pairs = wordPairCollection.findPairsByTarget('gift')
 
@@ -138,9 +130,9 @@ describe('WordPairCollection', () => {
 
 describe('getAllSourceWords', () => {
   it('should return all unique source words', () => {
-    wordPairCollection.add(new WordPair('gift', 'married'))
-    wordPairCollection.add(new WordPair('gift', 'poison'))
-    wordPairCollection.add(new WordPair('haus', 'hus'))
+    wordPairCollection.add('gift', 'married')
+    wordPairCollection.add('gift', 'poison')
+    wordPairCollection.add('haus', 'hus')
 
     expect(wordPairCollection.getAllSourceWords()).toEqual(['gift', 'haus'])
   })
@@ -152,25 +144,30 @@ describe('getAllSourceWords', () => {
 
 describe('getAllTargetWords', () => {
   it('should return all unique target words', () => {
-    wordPairCollection.add(new WordPair('gift', 'married'))
-    wordPairCollection.add(new WordPair('Geschenk', 'gift'))
+    wordPairCollection.add('gift', 'married')
+    wordPairCollection.add('Geschenk', 'gift')
 
     expect(wordPairCollection.getAllTargetWords()).toEqual(['married', 'gift'])
   })
+
+  it('should return an empty array for an empty collection', () => {
+  expect(wordPairCollection.getAllTargetWords()).toEqual([])
+})
 })
 
   describe('getAllPairs', () => {
-    it('should return an array containing all WordPair objects', () => {
-      const pair1 = new WordPair('haus', 'hus')
-      const pair2 = new WordPair('katze', 'katt')
-      wordPairCollection.add(pair1)
-      wordPairCollection.add(pair2)
+   it('should return an array containing all WordPair objects', () => {
+    wordPairCollection.add('haus', 'hus')
+    wordPairCollection.add('katze', 'katt')
 
-      expect(wordPairCollection.getAllPairs()).toEqual([pair1, pair2])
-    })
+    expect(wordPairCollection.getAllPairs()).toEqual([
+      new WordPair('haus', 'hus'),
+      new WordPair('katze', 'katt'),
+    ])
+  })
 
     it('should protect internal state against external array mutations', () => {
-      wordPairCollection.add(new WordPair('haus', 'hus'))
+      wordPairCollection.add('haus', 'hus')
       const copy = wordPairCollection.getAllPairs()
 
       copy.pop()
@@ -185,18 +182,18 @@ describe('getAllTargetWords', () => {
     })
 
     it('should increase when a pair is added', () => {
-      wordPairCollection.add(new WordPair('haus', 'hus'))
+      wordPairCollection.add('haus', 'hus')
       expect(wordPairCollection.size).toBe(1)
     })
 
     it('should decrease when a pair is removed', () => {
-      wordPairCollection.add(new WordPair('katze', 'katt'))
+      wordPairCollection.add('katze', 'katt')
       wordPairCollection.remove('katze', 'katt')
       expect(wordPairCollection.size).toBe(0)
     })
 
     it('should remain unchanged when attempting to remove a non-existent pair', () => {
-      wordPairCollection.add(new WordPair('haus', 'hus'))
+      wordPairCollection.add('haus', 'hus')
 
       expect(() => wordPairCollection.remove('nonexistent', 'word')).toThrow()
       expect(wordPairCollection.size).toBe(1)
@@ -205,7 +202,7 @@ describe('getAllTargetWords', () => {
 
   describe('has', () => {
   it('should return true when the pair exists', () => {
-    wordPairCollection.add(new WordPair('haus', 'hus'))
+    wordPairCollection.add('haus', 'hus')
     expect(wordPairCollection.has('haus', 'hus')).toBe(true)
   })
 
@@ -214,20 +211,20 @@ describe('getAllTargetWords', () => {
   })
 
   it('should return false when only the source matches', () => {
-    wordPairCollection.add(new WordPair('gift', 'married'))
+    wordPairCollection.add('gift', 'married')
     expect(wordPairCollection.has('gift', 'poison')).toBe(false)
   })
 
   it('should return false when only the target matches', () => {
-    wordPairCollection.add(new WordPair('gift', 'married'))
+    wordPairCollection.add('gift', 'married')
     expect(wordPairCollection.has('Geschenk', 'married')).toBe(false)
   })
 })
 
   describe('clear', () => {
     it('should remove all word pairs', () => {
-      wordPairCollection.add(new WordPair('haus', 'hus'))
-      wordPairCollection.add(new WordPair('katze', 'katt'))
+      wordPairCollection.add('haus', 'hus')
+      wordPairCollection.add('katze', 'katt')
 
       wordPairCollection.clear()
 
@@ -237,25 +234,24 @@ describe('getAllTargetWords', () => {
 
   describe('[Symbol.iterator]()', () => {
     it('should allow iteration over word pairs using for...of', () => {
-      const pair1 = new WordPair('haus', 'hus')
-      const pair2 = new WordPair('katze', 'katt')
-
-      wordPairCollection.add(pair1)
-      wordPairCollection.add(pair2)
+      wordPairCollection.add('haus', 'hus')
+      wordPairCollection.add('katze', 'katt')
 
       const iterated = []
       for (const pair of wordPairCollection) {
         iterated.push(pair)
       }
 
-      expect(iterated).toEqual([pair1, pair2])
+          expect(iterated).toEqual([
+      new WordPair('haus', 'hus'),
+      new WordPair('katze', 'katt'),
+    ])
     })
 
     it('should allow spreading the collection into an array using [...lexicon]', () => {
-      const pair = new WordPair('haus', 'hus')
-      wordPairCollection.add(pair)
+      wordPairCollection.add('haus', 'hus')
 
-      expect([...wordPairCollection]).toEqual([pair])
+      expect([...wordPairCollection]).toEqual([new WordPair('haus', 'hus')])
     })
   })
 })
