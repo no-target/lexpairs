@@ -12,13 +12,8 @@ export class WordPair {
    * @param {string} counterpart - The word associated with the headword.
    */
   constructor(headword, counterpart) {
-    if (typeof headword !== 'string' || headword.trim() === '') {
-      throw new TypeError('Headword must be a non-empty string')
-    }
-
-    if (typeof counterpart !== 'string' || counterpart.trim() === '') {
-      throw new TypeError('Counterpart must be a non-empty string')
-    }
+    this.#validateWord(headword)
+    this.#validateWord(counterpart)
 
     this.#headword = headword.trim()
     this.#counterpart = counterpart.trim()
@@ -70,5 +65,17 @@ export class WordPair {
    */
   equals(other) {
     return this.hasHeadword(other.headword) && this.hasCounterpart(other.counterpart)
+  }
+
+  /**
+   * Validates that a word is a non-empty string.
+   *
+   * @param {string} word - The word to validate.
+   * @throws {TypeError} If the word is not a non-empty string.
+   */
+  #validateWord(word) {
+    if (typeof word !== 'string' || word.trim() === '') {
+      throw new TypeError(`"${word}" is not a valid string`)
+    }
   }
 }
