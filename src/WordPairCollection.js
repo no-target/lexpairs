@@ -185,21 +185,23 @@ export class WordPairCollection {
   /**
    * Validates that all pairs are unique and can be added to the collection.
    *
-   * @param {WordPair[]} pairs
+   * @param {WordPair[]} pairs - The pairs to validate.
    * @throws {TypeError} If any item is not a WordPair.
    * @throws {Error} If any pair already exists or appears twice.
    */
   #validatePairs(pairs) {
-    this.#assertWordPairs(pairs)
+    this.#assertWordPair(pairs)
     this.#assertNoDuplicatePairs(pairs)
     this.#assertNoExistingPairs(pairs)
   }
 
-  /**
-   * @param {WordPair[]} pairs
-   * @throws {TypeError} If any item is not a WordPair.
-   */
-  #assertWordPairs(pairs) {
+/**
+ * Asserts that every item in the array is a WordPair.
+ *
+ * @param {WordPair[]} pairs - The pairs to validate.
+ * @throws {TypeError} If any item is not a WordPair.
+ */
+  #assertWordPair(pairs) {
     for (const pair of pairs) {
       if (!(pair instanceof WordPair)) {
         throw new TypeError('Each item must be a WordPair')
@@ -207,10 +209,14 @@ export class WordPairCollection {
     }
   }
 
-  /**
-   * @param {WordPair[]} pairs
-   * @throws {Error} If any pair appears more than once in the array.
-   */
+/**
+ * Asserts that no pair appears more than once in the array.
+ *
+ * Comparison is case-insensitive.
+ *
+ * @param {WordPair[]} pairs - The pairs to validate.
+ * @throws {Error} If any pair appears twice.
+ */
   #assertNoDuplicatePairs(pairs) {
     const seen = new Set()
 
@@ -225,10 +231,14 @@ export class WordPairCollection {
     }
   }
 
-  /**
-   * @param {WordPair[]} pairs
-   * @throws {Error} If any pair already exists in the collection.
-   */
+/**
+ * Asserts that no pair already exists in the collection.
+ *
+ * Comparison is case-insensitive.
+ *
+ * @param {WordPair[]} pairs - The pairs to validate.
+ * @throws {Error} If any pair already exists.
+ */
   #assertNoExistingPairs(pairs) {
     for (const pair of pairs) {
       if (this.has(pair.headword, pair.counterpart)) {
@@ -236,6 +246,7 @@ export class WordPairCollection {
       }
     }
   }
+
   /**
    * Allows iteration over all WordPair objects in the collection.
    *
