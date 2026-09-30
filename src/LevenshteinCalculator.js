@@ -10,7 +10,7 @@ export class LevenshteinCalculator {
   #distanceMatrix
   #firstWord
   #secondWord
-  
+
   /**
    * Calculates the minimum number of single-character edits
    * needed to transform one string into another.
@@ -27,15 +27,26 @@ export class LevenshteinCalculator {
 
     this.#firstWord = firstWord
     this.#secondWord = secondWord
-    this.#distanceMatrix = this.#createDistanceMatrix(firstWord, secondWord)
+    this.#distanceMatrix = this.#createDistanceMatrix()
 
-    this.#fillDistanceMatrix(firstWord, secondWord)
+    this.#fillDistanceMatrix()
 
     return this.#distanceMatrix[firstWord.length][secondWord.length]
   }
 
   /**
-   * Creates the distance matrix with its first row and column initialized.
+   * Creates and initializes the distance matrix used by the
+   * Levenshtein distance algorithm.
+   *
+   * Each cell represents the minimum number of edits required
+   * to transform a prefix of the first word into a prefix of
+   * the second word.
+   *
+   * The first row is initialized with the number of insertions
+   * required to transform an empty string into each prefix of
+   * the second word. The first column is initialized with the
+   * number of deletions required to transform each prefix of
+   * the first word into an empty string.
    *
    * @returns {number[][]} The initialized distance matrix.
    */
@@ -54,8 +65,10 @@ export class LevenshteinCalculator {
   }
 
   /**
-   * Fills the remaining cells of the distance matrix.
+   * Fills all remaining cells of the distance matrix.
    *
+   * Iterates over each row of the matrix and delegates the
+   * calculation of individual rows to {@link #fillRow}.
    */
   #fillDistanceMatrix() {
     for (let firstIndex = 1; firstIndex <= this.#firstWord.length; firstIndex++) {
@@ -64,25 +77,36 @@ export class LevenshteinCalculator {
   }
 
   /**
-   * Fills one row of the distance matrix.
+   * Fills all cells in a single row of the distance matrix.
    *
-   * @param {number} firstIndex - The index of the current row.
+   * Each cell contains the minimum number of edits required to
+   * transform the corresponding prefix of the first word into
+   * the corresponding prefix of the second word.
+   *
+   * @param {number} firstIndex - The index of the row to fill.
    */
   #fillRow(firstIndex) {
-  for (let secondIndex = 1; secondIndex <= this.#secondWord.length; secondIndex++) {
-    this.#distanceMatrix[firstIndex][secondIndex] = this.#calculateCellDistance(
-      firstIndex,
-      secondIndex,
-    )
+    for (let secondIndex = 1; secondIndex <= this.#secondWord.length; secondIndex++) {
+      this.#distanceMatrix[firstIndex][secondIndex] = this.#calculateCellDistance(firstIndex, secondIndex)
+    }
   }
-}
 
   /**
-   * Calculates the minimum distance for a single cell.
+   * Calculates the minimum edit distance for a single cell in the
+   * distance matrix.
+   *
+   * The cell considers three possible operations:
+   * - substitution: replace one character with another
+   * - insertion: insert a character into the first word
+   * - deletion: remove a character from the first word
+   *
+   * If the current characters are equal, substitution has no cost.
+   * Otherwise, substitution has a cost of one. The operation with
+   * the lowest total cost determines the value of the cell.
    *
    * @param {number} firstIndex - The current row index.
    * @param {number} secondIndex - The current column index.
-   * @returns {number} The minimum distance for the cell.
+   * @returns {number} The minimum number of edits required for the current cell.
    */
   #calculateCellDistance(firstIndex, secondIndex) {
     const charactersAreEqual = this.#firstWord[firstIndex - 1] === this.#secondWord[secondIndex - 1]
