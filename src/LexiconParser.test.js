@@ -71,9 +71,19 @@ describe('LexiconParser', () => {
       expect(pairs[0].counterpart).toBe('Haus')
     })
 
-    it('should throw if key is missint', () => {
-      expect(() => parser.parseJson('[]', { counterpartKey: 'x' })).toThrow(TypeError)
-      expect(() => parser.parseJson('[]', { headwordKey: 'x' })).toThrow(TypeError)
+    it('should throw if a required key is missing', () => {
+      expect(() => parser.parseJson('[]', { counterpartKey: 'hus' })).toThrow(TypeError)
+      expect(() => parser.parseJson('[]', { headwordKey: 'haus' })).toThrow(TypeError)
+    })
+
+    it('should throw when an item lacks a valid headword or counterpart', () => {
+      const missingHeadword = JSON.stringify([{ german: 'Haus' }])
+      const missingCounterpart = JSON.stringify([{ swedish: 'hus' }])
+      const emptyString = JSON.stringify([{ swedish: '', german: 'Haus' }])
+
+      expect(() => parser.parseJson(missingHeadword, keys)).toThrow(TypeError)
+      expect(() => parser.parseJson(missingCounterpart, keys)).toThrow(TypeError)
+      expect(() => parser.parseJson(emptyString, keys)).toThrow(TypeError)
     })
 
     it('should throw if the JSON is not an array', () => {
