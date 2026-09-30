@@ -37,13 +37,13 @@ export class LexiconParser {
    *
    * @param {string} text - A JSON string containing an array of objects.
    * @param {object} keys - Names of the properties holding each word.
-   * @param {string} keys.headwordKey - Name of the property holding the source word.
-   * @param {string} keys.counterpartKey - Name of the property holding the target word.
+   * @param {string} keys.headwordKey - Name of the property holding the headword.
+   * @param {string} keys.counterpartKey - Name of the property holding the counterpart word.
    * @returns {WordPair[]} The parsed word pairs.
-   * @throws {TypeError} If sourceKey or targetKey is missing.
+   * @throws {TypeError} If headWordKey or counterpartKey is missing.
    * @throws {SyntaxError} If the text is not valid JSON.
    * @throws {TypeError} If the JSON is not an array.
-   * @throws {TypeError} If an item lacks the source or target key, or the value is not a non-empty string.
+   * @throws {TypeError} If an item lacks the headword or counterpart key, or the value is not a non-empty string.
    */
   parseJson(text, { headwordKey, counterpartKey } = {}) {
     if (!headwordKey || !counterpartKey) {
