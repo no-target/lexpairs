@@ -190,18 +190,18 @@ export class WordPairCollection {
    * @throws {Error} If any pair already exists or appears twice.
    */
   #validatePairs(pairs) {
-    this.#assertWordPair(pairs)
-    this.#assertNoDuplicatePairs(pairs)
-    this.#assertNoExistingPairs(pairs)
+    this.#validatetWordPair(pairs)
+    this.#validateNoDuplicatePairs(pairs)
+    this.#validateNoExistingPairs(pairs)
   }
 
-/**
- * Asserts that every item in the array is a WordPair.
- *
- * @param {WordPair[]} pairs - The pairs to validate.
- * @throws {TypeError} If any item is not a WordPair.
- */
-  #assertWordPair(pairs) {
+  /**
+   * Validates that every item in the array is a WordPair.
+   *
+   * @param {WordPair[]} pairs - The pairs to validate.
+   * @throws {TypeError} If any item is not a WordPair.
+   */
+  #validatetWordPair(pairs) {
     for (const pair of pairs) {
       if (!(pair instanceof WordPair)) {
         throw new TypeError('Each item must be a WordPair')
@@ -209,15 +209,15 @@ export class WordPairCollection {
     }
   }
 
-/**
- * Asserts that no pair appears more than once in the array.
- *
- * Comparison is case-insensitive.
- *
- * @param {WordPair[]} pairs - The pairs to validate.
- * @throws {Error} If any pair appears twice.
- */
-  #assertNoDuplicatePairs(pairs) {
+  /**
+   * Validates that no pair appears more than once in the array.
+   *
+   * Comparison is case-insensitive.
+   *
+   * @param {WordPair[]} pairs - The pairs to validate.
+   * @throws {Error} If any pair appears twice.
+   */
+  #validateNoDuplicatePairs(pairs) {
     const seen = new Set()
 
     for (const pair of pairs) {
@@ -231,15 +231,15 @@ export class WordPairCollection {
     }
   }
 
-/**
- * Asserts that no pair already exists in the collection.
- *
- * Comparison is case-insensitive.
- *
- * @param {WordPair[]} pairs - The pairs to validate.
- * @throws {Error} If any pair already exists.
- */
-  #assertNoExistingPairs(pairs) {
+  /**
+   * Validates that no pair already exists in the collection.
+   *
+   * Comparison is case-insensitive.
+   *
+   * @param {WordPair[]} pairs - The pairs to validate.
+   * @throws {Error} If any pair already exists.
+   */
+  #validateNoExistingPairs(pairs) {
     for (const pair of pairs) {
       if (this.has(pair.headword, pair.counterpart)) {
         throw new Error(`Wordpair '${pair.headword}' -> '${pair.counterpart}' already exists`)
