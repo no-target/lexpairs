@@ -5,20 +5,6 @@ import { LexiconLookup } from './LexiconLookup.js'
 /**
  * A collection of word pairs. Provides different methods for look ups.
  *
- * @example
- * // Create an empty lexicon
- * const lexicon = new Lexicon()
- *
- * // Load pairs from a CSV file
- * await lexicon.loadFromFile('words.csv', ',')
- *
- * // Look up an exact match
- * lexicon.lookup.findPairsByHeadword('hus')
- * // → [{ headword: 'hus', counterpart: 'house' }]
- *
- * // Fuzzy lookup: find headwords within 2 edits of 'huss'
- * lexicon.lookup.similarHeadword('huss', 2)
- * // → [{ headword: 'hus', counterpart: 'house' }]
  */
 export class Lexicon {
   #lexicon

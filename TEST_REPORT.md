@@ -2,12 +2,9 @@
 
 ## Summary
 
-*Briefly describe how you tested your module, and why you chose that approach — clearly enough
-that someone else could carry out the same tests. What was hardest to test, and why?*
+I chose to test the module using automated unit tests with Vitest because it makes it so much  easier to run the same tests repeatedly,especially when refactoring a lot, it really helps to have unit tests that can tell you if you broke something on accident, and they were a great help to me during the process. The testing is manily focused on verifying that the different classes work as expected, but I also tested some invalid input, edge cases, and error handling although not as thoroughly as I would have liked. I wrote separate test suites for the different classes so that each part of the module could be tested independently.
 
-*If you used a testing framework, you may link to its generated report or include screenshots of
-the test run here.*
-
+I found the `WordPairCollection` class the most difficult to test overall, as it has many methods that work in similar ways, but some operate on the headword while others operate on the counterpart. This sometimes made it confusing to keep track of which part of the `WordPair` each method was supposed to work with or what it returns. It also didn’t help that I struggled a lot with finding clear and suitable names for the methods and ended up trying out different names several times during the process which further added to the confusion.
 
 
 ## Test Run
