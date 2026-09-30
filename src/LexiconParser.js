@@ -14,21 +14,16 @@ export class LexiconParser {
    * @returns {WordPair[]} The parsed word pairs.
    */
   parseDelimitedText(text, delimiter = ',') {
-    const lines = text.split(/\r?\n/)
     const pairs = []
 
-    for (const line of lines) {
-      const trimmedLine = line.trim()
-      if (!trimmedLine) {
-        continue
-      }
+    for (const line of this.#splitLines(text)) {
+      const fields = this.#trimFields(line, delimiter)
 
-      // Trim each field so whitespace-only fields count as empty and the line is skipped
-      const [headword, counterpart] = trimmedLine.split(delimiter).map((field) => field.trim())
-      if (headword && counterpart) {
-        pairs.push(new WordPair(headword, counterpart))
+      if (this.#hasRequiredFields(fields)) {
+        pairs.push(new WordPair(fields[0], fields[1]))
       }
     }
+
     return pairs
   }
 
@@ -40,15 +35,13 @@ export class LexiconParser {
    * @param {string} keys.headwordKey - Name of the property holding the headword.
    * @param {string} keys.counterpartKey - Name of the property holding the counterpart word.
    * @returns {WordPair[]} The parsed word pairs.
-   * @throws {TypeError} If headWordKey or counterpartKey is missing.
+   * @throws {TypeError} If headwordKey or counterpartKey is missing.
    * @throws {SyntaxError} If the text is not valid JSON.
    * @throws {TypeError} If the JSON is not an array.
    * @throws {TypeError} If an item lacks the headword or counterpart key, or the value is not a non-empty string.
    */
   parseJson(text, { headwordKey, counterpartKey } = {}) {
-    if (!headwordKey || !counterpartKey) {
-      throw new TypeError('Both headwordKey and counterpartKey are required')
-    }
+    this.#validateKeys(headwordKey, counterpartKey)
 
     const data = JSON.parse(text)
 
@@ -81,5 +74,56 @@ export class LexiconParser {
     }
 
     return value
+  }
+
+  /**
+   * Splits text into individual lines.
+   *
+   * Supports both Unix and Windows line endings.
+   *
+   * @param {string} text - The raw text.
+   * @returns {string[]} The individual lines.
+   */
+  #splitLines(text) {
+    return text.split(/\r?\n/)
+  }
+
+  /**
+   * Splits a line into trimmed fields.
+   *
+   * @param {string} line - The line to split.
+   * @param {string} delimiter - The character separating fields.
+   * @returns {string[]} The trimmed fields.
+   */
+  #trimFields(line, delimiter) {
+    return line
+      .trim()
+      .split(delimiter)
+      .map((field) => field.trim())
+  }
+
+  /**
+   * Determines whether a line contains the required fields.
+   *
+   * A valid line must contain both a non-empty headword and counterpart.
+   *
+   * @param {string[]} fields - The fields extracted from a line.
+   * @returns {boolean} True if the line contains both required fields.
+   */
+  #hasRequiredFields(fields) {
+    return Boolean(fields[0] && fields[1])
+  }
+
+  /**
+   * Validates the keys used to extract words from JSON objects.
+   *
+   * @param {string} headwordKey - The property name containing the headword.
+   * @param {string} counterpartKey - The property name containing the counterpart.
+   * @throws {TypeError} If either key is missing.
+   */
+  #validateKeys(headwordKey, counterpartKey) {
+    if (!headwordKey || !counterpartKey) {
+      throw new TypeError('Both headwordKey and counterpartKey are required')
+    }
   }
 }
