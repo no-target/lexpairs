@@ -43,12 +43,32 @@ export class WordPair {
   }
 
   /**
-   * Checks whether a pair is equal to another pair.
+   * Checks whether the headword matches the given word, case-insensitive.
+   *
+   * @param {string} word - The word to compare against.
+   * @returns {boolean} True if the headword matches.
+   */
+  hasHeadword(word) {
+    return this.#headword.toLowerCase() === word.toLowerCase()
+  }
+
+  /**
+   * Checks whether the counterpart matches the given word, case-insensitive.
+   *
+   * @param {string} word - The word to compare against.
+   * @returns {boolean} True if the counterpart matches.
+   */
+  hasCounterpart(word) {
+    return this.#counterpart.toLowerCase() === word.toLowerCase()
+  }
+
+  /**
+   * Checks whether this pair equals another pair, case-insensitive.
    *
    * @param {WordPair} other - The pair to compare against.
-   * @returns {boolean} True if headword and counterword both match.
+   * @returns {boolean} True if both headword and counterpart match.
    */
   equals(other) {
-    return this.#headword === other.#headword && this.#counterpart === other.#counterpart
+    return this.hasHeadword(other.headword) && this.hasCounterpart(other.counterpart)
   }
 }

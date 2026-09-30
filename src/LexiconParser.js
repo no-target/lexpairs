@@ -56,31 +56,30 @@ export class LexiconParser {
       throw new TypeError('Expected a JSON array of objects')
     }
 
- 
-  return data.map((item, index) => {
-    const headword = this.#requireWord(item, headwordKey, index)
-    const counterpart = this.#requireWord(item, counterpartKey, index)
+    return data.map((item, index) => {
+      const headword = this.#requireWord(item, headwordKey, index)
+      const counterpart = this.#requireWord(item, counterpartKey, index)
 
-    return new WordPair(headword, counterpart)
-  })
-}
-
-/**
- * Extracts and validates a word from an item.
- *
- * @param {Object} item - The object to read from.
- * @param {string} key - The property name holding the word.
- * @param {number} index - The item's position in the array.
- * @returns {string} The extracted word.
- * @throws {TypeError} If the value is not a non-empty string.
- */
-#requireWord(item, key, index) {
-  const value = item[key]
-
-  if (typeof value !== 'string' || value.trim() === '') {
-    throw new TypeError(`Item at index ${index} is missing a valid '${key}'`)
+      return new WordPair(headword, counterpart)
+    })
   }
 
-  return value
-}
+  /**
+   * Extracts and validates a word from an item.
+   *
+   * @param {Object} item - The object to read from.
+   * @param {string} key - The property name holding the word.
+   * @param {number} index - The item's position in the array.
+   * @returns {string} The extracted word.
+   * @throws {TypeError} If the value is not a non-empty string.
+   */
+  #requireWord(item, key, index) {
+    const value = item[key]
+
+    if (typeof value !== 'string' || value.trim() === '') {
+      throw new TypeError(`Item at index ${index} is missing a valid '${key}'`)
+    }
+
+    return value
+  }
 }
