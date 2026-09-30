@@ -12,15 +12,15 @@ export class LexiconLookup {
    * Creates a new lookup service for the given collection.
    *
    * Uses Levenshtein distance by default, but any calculator with a
-   * calculateDistance(a, b) method can be passed in.
+   * distance(a, b) method can be passed in.
    *
    * @param {WordPairCollection} collection - The collection to look up in.
    * @param {LevenshteinCalculator} [distanceCalculator] - The distance calculator to use.
-   * @throws {TypeError} If distanceCalculator lacks a calculateDistance method.
+   * @throws {TypeError} If distanceCalculator lacks a distance method.
    */
   constructor(collection, distanceCalculator = new LevenshteinCalculator()) {
-    if (typeof distanceCalculator?.calculateDistance !== 'function') {
-      throw new TypeError('distanceCalculator must have a calculateDistance(a, b) method')
+    if (typeof distanceCalculator?.distance !== 'function') {
+      throw new TypeError('distanceCalculator must have a distance(a, b) method')
     }
 
     this.#collection = collection
@@ -108,7 +108,7 @@ export class LexiconLookup {
    * @returns {boolean} True if the words are within the maximum distance.
    */
   #isWithinMaxDistance(firstWord, secondWord, maxDistance) {
-    const distance = this.#distanceCalculator.calculateDistance(firstWord.toLowerCase(), secondWord.toLowerCase())
+    const distance = this.#distanceCalculator.distance(firstWord.toLowerCase(), secondWord.toLowerCase())
 
     return distance <= maxDistance
   }

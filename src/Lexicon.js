@@ -50,7 +50,7 @@ export class Lexicon {
    * Loads word pairs from a delimited text file.
    *
    * @param {string} filePath - The path to the file to read.
-   * @param {string} delimiter - The character separating fields on each line.
+   * @param {string} delimiter - The character separating fields on each line, defaults to ','.
    * @returns {Promise<void>} Resolves when all pairs have been added.
    * @throws {Error} If the file cannot be read.
    * @throws {TypeError} If any line contains invalid data.
