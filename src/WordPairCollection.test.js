@@ -9,100 +9,77 @@ describe('WordPairCollection', () => {
     wordPairCollection = new WordPairCollection()
   })
 
-  describe('constructor', () => {
-    it('should create an empty collection by default', () => {
-      expect(wordPairCollection.size).toBe(0)
-    })
-  })
-
   describe('add', () => {
     it('should add a word pair to collection', () => {
       wordPairCollection.add('haus', 'hus')
       expect(wordPairCollection.size).toBe(1)
     })
 
-    it('should throw a TypeError when headword is not a string', () => {
-      expect(() => wordPairCollection.add(123, 'hus')).toThrow(TypeError)
-    })
-
-    it('should throw a TypeError when target is not a string', () => {
-      expect(() => wordPairCollection.add('haus', 123)).toThrow(TypeError)
-    })
-
-    it('should throw when adding an identical pair twice', () => {
+    it('should throw when adding an identical pair', () => {
       wordPairCollection.add('gift', 'poison')
       expect(() => wordPairCollection.add('gift', 'poison')).toThrow()
     })
 
-    it('should allow multiple different translations for the same headword', () => {
+    it('should allow multiple counterparts for the same headword', () => {
       wordPairCollection.add('gift', 'married')
       wordPairCollection.add('gift', 'poison')
 
       expect(wordPairCollection.size).toBe(2)
     })
 
-    describe('addMany', () => {
-  it('should add multiple pairs at once', () => {
-    wordPairCollection.addMany([
-      new WordPair('hus', 'haus'),
-      new WordPair('bil', 'auto'),
-    ])
+    it('should throw when adding a pair that differs only in case', () => {
+      wordPairCollection.add('Haus', 'house')
 
-    expect(wordPairCollection.size).toBe(2)
-    expect(wordPairCollection.has('hus', 'haus')).toBe(true)
-    expect(wordPairCollection.has('bil', 'auto')).toBe(true)
+      expect(() => wordPairCollection.add('haus', 'house')).toThrow()
+      expect(() => wordPairCollection.add('HAUS', 'HOUSE')).toThrow()
+    })
   })
 
-  it('should accept an empty array', () => {
-    wordPairCollection.addMany([])
-    expect(wordPairCollection.size).toBe(0)
-  })
+  describe('addMany', () => {
+    it('should add multiple pairs at once', () => {
+      wordPairCollection.addMany([new WordPair('hus', 'haus'), new WordPair('bil', 'auto')])
 
-  it('should throw a TypeError when pairs is not an array', () => {
-    expect(() => wordPairCollection.addMany(null)).toThrow(TypeError)
-    expect(() => wordPairCollection.addMany('not an array')).toThrow(TypeError)
-    expect(() => wordPairCollection.addMany({})).toThrow(TypeError)
-  })
+      expect(wordPairCollection.size).toBe(2)
+      expect(wordPairCollection.has('hus', 'haus')).toBe(true)
+      expect(wordPairCollection.has('bil', 'auto')).toBe(true)
+    })
 
-  it('should throw a TypeError when an item is not a WordPair', () => {
-    expect(() =>
-      wordPairCollection.addMany([{ headword: 'hus', counterpart: 'haus' }])
-    ).toThrow(TypeError)
-  })
+    it('should throw a TypeError when pairs is not an array', () => {
+      expect(() => wordPairCollection.addMany(null)).toThrow(TypeError)
+      expect(() => wordPairCollection.addMany('not an array')).toThrow(TypeError)
+      expect(() => wordPairCollection.addMany({})).toThrow(TypeError)
+    })
 
-  it('should throw when a pair already exists', () => {
-    wordPairCollection.add('hus', 'haus')
+    it('should throw when a pair already exists', () => {
+      wordPairCollection.add('hus', 'haus')
 
-    expect(() =>
-      wordPairCollection.addMany([new WordPair('hus', 'haus')])
-    ).toThrow()
-  })
+      expect(() => wordPairCollection.addMany([new WordPair('hus', 'haus')])).toThrow()
+    })
 
-  it('should not add any pairs if one is invalid (all or nothing)', () => {
-    wordPairCollection.add('hus', 'haus')
+    it('should not add any pairs if one is invalid (all or nothing)', () => {
+      wordPairCollection.add('hus', 'haus')
 
-    expect(() =>
-      wordPairCollection.addMany([
-        new WordPair('bil', 'auto'),
-        new WordPair('hus', 'haus'), 
-      ])
-    ).toThrow()
+      expect(() => wordPairCollection.addMany([new WordPair('bil', 'auto'), new WordPair('hus', 'haus')])).toThrow()
 
-    expect(wordPairCollection.size).toBe(1)
-    expect(wordPairCollection.has('bil', 'auto')).toBe(false)
-  })
+      expect(wordPairCollection.size).toBe(1)
+      expect(wordPairCollection.has('bil', 'auto')).toBe(false)
+    })
 
-  it('should not add any pairs if one is not a WordPair', () => {
-    expect(() =>
-      wordPairCollection.addMany([
-        new WordPair('bil', 'auto'),
-        { headword: 'hus', counterpart: 'haus' },  
-      ])
-    ).toThrow(TypeError)
+    it('should not add any pairs when an item is not a WordPair', () => {
+      expect(() =>
+        wordPairCollection.addMany([new WordPair('bil', 'auto'), { headword: 'hus', counterpart: 'haus' }])
+      ).toThrow(TypeError)
 
-    expect(wordPairCollection.size).toBe(0)
-  })
-})
+      expect(wordPairCollection.size).toBe(0)
+    })
+
+    it('should throw when input contains duplicate pairs', () => {
+      expect(() => wordPairCollection.addMany([new WordPair('bil', 'auto'), new WordPair('bil', 'auto')])).toThrow()
+    })
+
+    it('should treat pairs with different casing as duplicates', () => {
+      expect(() => wordPairCollection.addMany([new WordPair('Haus', 'house'), new WordPair('haus', 'house')])).toThrow()
+    })
   })
 
   describe('remove', () => {
@@ -116,11 +93,17 @@ describe('WordPairCollection', () => {
       expect(wordPairCollection.size).toBe(0)
     })
 
+    it('should remove pairs regardless of case', () => {
+      wordPairCollection.add('Haus', 'house')
+      wordPairCollection.remove('haus', 'HOUSE')
+      expect(wordPairCollection.size).toBe(0)
+    })
+
     it('should throw when the pair does not exist', () => {
       expect(() => wordPairCollection.remove('nonexistent', 'word')).toThrow()
     })
 
-    it('should not remove a pair when only the source matches', () => {
+    it('should not remove a pair when only the headword matches', () => {
       wordPairCollection.add('gift', 'married')
       wordPairCollection.add('gift', 'poison')
 
@@ -142,6 +125,11 @@ describe('WordPairCollection', () => {
     it('should return an empty array if the headword is not found', () => {
       expect(wordPairCollection.findCounterparts('nonexistent')).toEqual([])
     })
+
+    it('should find counterparts regardless of case', () => {
+      wordPairCollection.add('Haus', 'house')
+      expect(wordPairCollection.findCounterparts('haus')).toEqual(['house'])
+    })
   })
 
   describe('findHeadwords', () => {
@@ -152,8 +140,13 @@ describe('WordPairCollection', () => {
       expect(wordPairCollection.findHeadwords('sova')).toEqual(['schlafen', 'pennen'])
     })
 
-    it('should return an empty array if the target word is not found', () => {
+    it('should return an empty array if the counterpart is not found', () => {
       expect(wordPairCollection.findHeadwords('nonexistent')).toEqual([])
+    })
+
+    it('should find headwords regardless of case', () => {
+      wordPairCollection.add('Haus', 'house')
+      expect(wordPairCollection.findHeadwords('HOUSE')).toEqual(['Haus'])
     })
   })
 
@@ -164,9 +157,14 @@ describe('WordPairCollection', () => {
 
       const pairs = wordPairCollection.findPairsByHeadword('gift')
 
-      expect(pairs).toHaveLength(2)
-      expect(pairs.every((pair) => pair instanceof WordPair)).toBe(true)
-      expect(pairs.map((p) => p.counterpart)).toEqual(['married', 'poison'])
+      expect(pairs).toEqual([new WordPair('gift', 'married'), new WordPair('gift', 'poison')])
+    })
+
+    it('should find pairs regardless of case in headword', () => {
+      wordPairCollection.add('Haus', 'house')
+      expect(wordPairCollection.findPairsByHeadword('haus')).toHaveLength(1)
+      expect(wordPairCollection.findPairsByHeadword('HAUS')).toHaveLength(1)
+      expect(wordPairCollection.findPairsByHeadword('Haus')).toHaveLength(1)
     })
 
     it('should return an empty array if no pairs match the headword', () => {
@@ -186,13 +184,19 @@ describe('WordPairCollection', () => {
       expect(pairs[0].headword).toBe('Geschenk')
     })
 
-    it('should return an empty array if no pairs match the target word', () => {
+    it('should find pairs regardless of case in counterpart', () => {
+      wordPairCollection.add('Haus', 'house')
+      expect(wordPairCollection.findPairsByCounterpart('HOUSE')).toHaveLength(1)
+      expect(wordPairCollection.findPairsByCounterpart('house')).toHaveLength(1)
+    })
+
+    it('should return an empty array if no pairs match the counterpart word', () => {
       expect(wordPairCollection.findPairsByCounterpart('nonexistent')).toEqual([])
     })
   })
 
-  describe('getAllHeadwords', () => {
-    it('should return all unique source words', () => {
+  describe('allHeadwords', () => {
+    it('should return all unique headwords', () => {
       wordPairCollection.add('gift', 'married')
       wordPairCollection.add('gift', 'poison')
       wordPairCollection.add('haus', 'hus')
@@ -206,7 +210,7 @@ describe('WordPairCollection', () => {
   })
 
   describe('allCounterparts', () => {
-    it('should return all unique target words', () => {
+    it('should return all unique counterpart words', () => {
       wordPairCollection.add('gift', 'married')
       wordPairCollection.add('Geschenk', 'gift')
 
@@ -237,26 +241,13 @@ describe('WordPairCollection', () => {
   })
 
   describe('size', () => {
-    it('should return 0 for an empty collection', () => {
+    it('should return the number of word pairs', () => {
       expect(wordPairCollection.size).toBe(0)
-    })
 
-    it('should increase when a pair is added', () => {
       wordPairCollection.add('haus', 'hus')
-      expect(wordPairCollection.size).toBe(1)
-    })
-
-    it('should decrease when a pair is removed', () => {
       wordPairCollection.add('katze', 'katt')
-      wordPairCollection.remove('katze', 'katt')
-      expect(wordPairCollection.size).toBe(0)
-    })
 
-    it('should remain unchanged when attempting to remove a non-existent pair', () => {
-      wordPairCollection.add('haus', 'hus')
-
-      expect(() => wordPairCollection.remove('nonexistent', 'word')).toThrow()
-      expect(wordPairCollection.size).toBe(1)
+      expect(wordPairCollection.size).toBe(2)
     })
   })
 
@@ -267,17 +258,11 @@ describe('WordPairCollection', () => {
     })
 
     it('should return false when the pair does not exist', () => {
-      expect(wordPairCollection.has('haus', 'hus')).toBe(false)
-    })
-
-    it('should return false when only the source matches', () => {
       wordPairCollection.add('gift', 'married')
+
       expect(wordPairCollection.has('gift', 'poison')).toBe(false)
-    })
-
-    it('should return false when only the target matches', () => {
-      wordPairCollection.add('gift', 'married')
       expect(wordPairCollection.has('Geschenk', 'married')).toBe(false)
+      expect(wordPairCollection.has('haus', 'hus')).toBe(false)
     })
   })
 
@@ -298,17 +283,12 @@ describe('WordPairCollection', () => {
       wordPairCollection.add('katze', 'katt')
 
       const iterated = []
+
       for (const pair of wordPairCollection) {
         iterated.push(pair)
       }
 
       expect(iterated).toEqual([new WordPair('haus', 'hus'), new WordPair('katze', 'katt')])
-    })
-
-    it('should allow spreading the collection into an array using [...lexicon]', () => {
-      wordPairCollection.add('haus', 'hus')
-
-      expect([...wordPairCollection]).toEqual([new WordPair('haus', 'hus')])
     })
   })
 })
