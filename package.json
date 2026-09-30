@@ -1,7 +1,7 @@
 {
   "name": "lexpairs",
   "version": "1.0.0",
-  "description": "A word pair collection module with fuzzy search",
+  "description": "A word pair lexicon with exact and fuzzy search",
   "type": "module",
   "main": "./index.js",
   "exports": {
