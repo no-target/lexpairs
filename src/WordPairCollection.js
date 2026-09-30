@@ -28,7 +28,7 @@ export class WordPairCollection {
   add(headword, counterpart) {
     const pair = new WordPair(headword, counterpart)
 
-    if (this.has(headword, counterpart)) {
+    if (this.#pairs.some((existingPair) => existingPair.equals(pair))) {
       throw new Error(`Wordpair '${headword}' -> '${counterpart}' already exists`)
     }
 
@@ -72,23 +72,23 @@ export class WordPairCollection {
   }
 
   /**
-   * Finds and returns all target words associated with a given headword.
-   *
-   * @param {string} headword - The headword to look up.
-   * @returns {string[]} An array of counterparts associated with the headword.
-   */
-  findCounterparts(headword) {
-    return this.#pairs.filter((pair) => pair.headword === headword).map((pair) => pair.counterpart)
-  }
-
-  /**
    * Finds and returns all headwords associated with a given counterpart.
    *
    * @param {string} counterpart - The counterpart word to look up associated headwords for.
    * @returns {string[]} An array of headwords associated with the counterpart.
    */
   findHeadwords(counterpart) {
-    return this.#pairs.filter((pair) => pair.counterpart === counterpart).map((pair) => pair.headword)
+    return this.#pairs.filter((pair) => pair.hasCounterpart(counterpart)).map((pair) => pair.headword)
+  }
+
+  /**
+   * Finds and returns all target words associated with a given headword.
+   *
+   * @param {string} headword - The headword to look up.
+   * @returns {string[]} An array of counterparts associated with the headword.
+   */
+  findCounterparts(headword) {
+    return this.#pairs.filter((pair) => pair.hasHeadword(headword)).map((pair) => pair.counterpart)
   }
 
   /**
@@ -98,7 +98,7 @@ export class WordPairCollection {
    * @returns {WordPair[]} An array of WordPair objects that contain the headword.
    */
   findPairsByHeadword(headword) {
-    return this.#pairs.filter((pair) => pair.headword === headword)
+    return this.#pairs.filter((pair) => pair.hasHeadword(headword))
   }
 
   /**
@@ -108,7 +108,7 @@ export class WordPairCollection {
    * @returns {WordPair[]} An array of WordPair objects that contain the counterpart.
    */
   findPairsByCounterpart(counterpart) {
-    return this.#pairs.filter((pair) => pair.counterpart === counterpart)
+    return this.#pairs.filter((pair) => pair.hasCounterpart(counterpart))
   }
 
   /**
@@ -136,7 +136,8 @@ export class WordPairCollection {
    * @returns {boolean} True if the pair exists.
    */
   has(headword, counterpart) {
-    return this.#pairs.some((pair) => pair.headword === headword && pair.counterpart === counterpart)
+    const pair = new WordPair(headword, counterpart)
+    return this.#pairs.some((existingPair) => existingPair.equals(pair))
   }
 
   /**
@@ -173,7 +174,8 @@ export class WordPairCollection {
    * @throws {Error} If the word pair is not found in the collection.
    */
   #findIndex(headword, counterpart) {
-    const index = this.#pairs.findIndex((pair) => pair.headword === headword && pair.counterpart === counterpart)
+    const pair = new WordPair(headword, counterpart)
+    const index = this.#pairs.findIndex((existingPair) => existingPair.equals(pair))
     if (index === -1) {
       throw new Error(`Wordpair '${headword}' -> '${counterpart}' not found`)
     }
@@ -181,23 +183,59 @@ export class WordPairCollection {
   }
 
   /**
-   * Validates that every item is a WordPair and that no pair already exists.
+   * Validates that all pairs are unique and can be added to the collection.
    *
-   * @param {WordPair[]} pairs - The pairs to validate.
+   * @param {WordPair[]} pairs
    * @throws {TypeError} If any item is not a WordPair.
-   * @throws {Error} If any pair already exists in the collection.
+   * @throws {Error} If any pair already exists or appears twice.
    */
   #validatePairs(pairs) {
+    this.#assertWordPairs(pairs)
+    this.#assertNoDuplicatePairs(pairs)
+    this.#assertNoExistingPairs(pairs)
+  }
+
+  /**
+   * @param {WordPair[]} pairs
+   * @throws {TypeError} If any item is not a WordPair.
+   */
+  #assertWordPairs(pairs) {
     for (const pair of pairs) {
       if (!(pair instanceof WordPair)) {
         throw new TypeError('Each item must be a WordPair')
       }
+    }
+  }
+
+  /**
+   * @param {WordPair[]} pairs
+   * @throws {Error} If any pair appears more than once in the array.
+   */
+  #assertNoDuplicatePairs(pairs) {
+    const seen = new Set()
+
+    for (const pair of pairs) {
+      const key = `${pair.headword.toLowerCase()}|${pair.counterpart.toLowerCase()}`
+
+      if (seen.has(key)) {
+        throw new Error(`Wordpair '${pair.headword}' -> '${pair.counterpart}' appears twice`)
+      }
+
+      seen.add(key)
+    }
+  }
+
+  /**
+   * @param {WordPair[]} pairs
+   * @throws {Error} If any pair already exists in the collection.
+   */
+  #assertNoExistingPairs(pairs) {
+    for (const pair of pairs) {
       if (this.has(pair.headword, pair.counterpart)) {
         throw new Error(`Wordpair '${pair.headword}' -> '${pair.counterpart}' already exists`)
       }
     }
   }
-
   /**
    * Allows iteration over all WordPair objects in the collection.
    *
