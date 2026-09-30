@@ -36,7 +36,7 @@ export class LexiconParser {
    * Parses a JSON array of objects into word pairs.
    *
    * @param {string} text - A JSON string containing an array of objects.
-   * @param {Object} keys - Names of the properties holding each word.
+   * @param {object} keys - Names of the properties holding each word.
    * @param {string} keys.headwordKey - Name of the property holding the source word.
    * @param {string} keys.counterpartKey - Name of the property holding the target word.
    * @returns {WordPair[]} The parsed word pairs.
@@ -56,6 +56,31 @@ export class LexiconParser {
       throw new TypeError('Expected a JSON array of objects')
     }
 
-    return data.map((item) => new WordPair(item[headwordKey], item[counterpartKey]))
+ 
+  return data.map((item, index) => {
+    const headword = this.#requireWord(item, headwordKey, index)
+    const counterpart = this.#requireWord(item, counterpartKey, index)
+
+    return new WordPair(headword, counterpart)
+  })
+}
+
+/**
+ * Extracts and validates a word from an item.
+ *
+ * @param {Object} item - The object to read from.
+ * @param {string} key - The property name holding the word.
+ * @param {number} index - The item's position in the array.
+ * @returns {string} The extracted word.
+ * @throws {TypeError} If the value is not a non-empty string.
+ */
+#requireWord(item, key, index) {
+  const value = item[key]
+
+  if (typeof value !== 'string' || value.trim() === '') {
+    throw new TypeError(`Item at index ${index} is missing a valid '${key}'`)
   }
+
+  return value
+}
 }
