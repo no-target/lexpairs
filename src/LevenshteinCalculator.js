@@ -1,7 +1,16 @@
 /**
+ * Calculates the Levenshtein edit distance between two strings.
+ *
+ * The Levenshtein distance is the minimum number of single-character
+ * insertions, deletions, or substitutions required to transform one
+ * string into another.
  *
  */
 export class LevenshteinCalculator {
+  #distanceMatrix
+  #firstWord
+  #secondWord
+  
   /**
    * Calculates the minimum number of single-character edits
    * needed to transform one string into another.
@@ -16,28 +25,28 @@ export class LevenshteinCalculator {
       throw new TypeError('Both arguments must be strings')
     }
 
-    const matrix = this.#createDistanceMatrix(firstWord, secondWord)
+    this.#firstWord = firstWord
+    this.#secondWord = secondWord
+    this.#distanceMatrix = this.#createDistanceMatrix(firstWord, secondWord)
 
-    this.#fillDistanceMatrix(matrix, firstWord, secondWord)
+    this.#fillDistanceMatrix(firstWord, secondWord)
 
-    return matrix[firstWord.length][secondWord.length]
+    return this.#distanceMatrix[firstWord.length][secondWord.length]
   }
 
   /**
    * Creates the distance matrix with its first row and column initialized.
    *
-   * @param {string} firstWord - The first string.
-   * @param {string} secondWord - The second string.
    * @returns {number[][]} The initialized distance matrix.
    */
-  #createDistanceMatrix(firstWord, secondWord) {
+  #createDistanceMatrix() {
     const matrix = []
 
-    for (let firstIndex = 0; firstIndex <= firstWord.length; firstIndex++) {
+    for (let firstIndex = 0; firstIndex <= this.#firstWord.length; firstIndex++) {
       matrix[firstIndex] = [firstIndex]
     }
 
-    for (let secondIndex = 0; secondIndex <= secondWord.length; secondIndex++) {
+    for (let secondIndex = 0; secondIndex <= this.#secondWord.length; secondIndex++) {
       matrix[0][secondIndex] = secondIndex
     }
 
@@ -47,56 +56,44 @@ export class LevenshteinCalculator {
   /**
    * Fills the remaining cells of the distance matrix.
    *
-   * @param {number[][]} matrix - The distance matrix.
-   * @param {string} firstWord - The first string.
-   * @param {string} secondWord - The second string.
    */
-  #fillDistanceMatrix(matrix, firstWord, secondWord) {
-    for (let firstIndex = 1; firstIndex <= firstWord.length; firstIndex++) {
-      this.#fillRow(matrix, firstWord, secondWord, firstIndex)
+  #fillDistanceMatrix() {
+    for (let firstIndex = 1; firstIndex <= this.#firstWord.length; firstIndex++) {
+      this.#fillRow(firstIndex)
     }
   }
 
   /**
    * Fills one row of the distance matrix.
    *
-   * @param {number[][]} matrix - The distance matrix.
-   * @param {string} firstWord - The first string.
-   * @param {string} secondWord - The second string.
    * @param {number} firstIndex - The index of the current row.
    */
-  #fillRow(matrix, firstWord, secondWord, firstIndex) {
-    for (let secondIndex = 1; secondIndex <= secondWord.length; secondIndex++) {
-      matrix[firstIndex][secondIndex] = this.#calculateCellDistance(
-        matrix,
-        firstWord,
-        secondWord,
-        firstIndex,
-        secondIndex
-      )
-    }
+  #fillRow(firstIndex) {
+  for (let secondIndex = 1; secondIndex <= this.#secondWord.length; secondIndex++) {
+    this.#distanceMatrix[firstIndex][secondIndex] = this.#calculateCellDistance(
+      firstIndex,
+      secondIndex,
+    )
   }
+}
 
   /**
    * Calculates the minimum distance for a single cell.
    *
-   * @param {number[][]} matrix - The distance matrix.
-   * @param {string} firstWord - The first string.
-   * @param {string} secondWord - The second string.
    * @param {number} firstIndex - The current row index.
    * @param {number} secondIndex - The current column index.
    * @returns {number} The minimum distance for the cell.
    */
-  #calculateCellDistance(matrix, firstWord, secondWord, firstIndex, secondIndex) {
-    const charactersAreEqual = firstWord[firstIndex - 1] === secondWord[secondIndex - 1]
+  #calculateCellDistance(firstIndex, secondIndex) {
+    const charactersAreEqual = this.#firstWord[firstIndex - 1] === this.#secondWord[secondIndex - 1]
 
     const substitutionCost = charactersAreEqual ? 0 : 1
 
-    const viaSubstitution = matrix[firstIndex - 1][secondIndex - 1] + substitutionCost
+    const viaSubstitution = this.#distanceMatrix[firstIndex - 1][secondIndex - 1] + substitutionCost
 
-    const viaInsertion = matrix[firstIndex][secondIndex - 1] + 1
+    const viaInsertion = this.#distanceMatrix[firstIndex][secondIndex - 1] + 1
 
-    const viaDeletion = matrix[firstIndex - 1][secondIndex] + 1
+    const viaDeletion = this.#distanceMatrix[firstIndex - 1][secondIndex] + 1
 
     return Math.min(viaSubstitution, viaInsertion, viaDeletion)
   }
