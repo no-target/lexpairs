@@ -2,18 +2,18 @@ import fs from 'node:fs/promises'
 import { LexiconParser } from './LexiconParser.js'
 
 /**
- * Reads lexicon data from files and delegates parsing to a LexiconParser.
+ * Reads lexicon data from files, delegates parsing to a LexiconParser.
  */
 export class LexiconFileReader {
   #parser
 
-/**
- * Creates a new LexiconFileReader.
- *
- * Uses a new LexiconParser by default.
- *
- * @param {LexiconParser} [parser] - The parser used to convert raw file text into word pairs.
- */
+  /**
+   * Creates a new LexiconFileReader.
+   *
+   * Uses a new LexiconParser by default.
+   *
+   * @param {LexiconParser} [parser] - The parser used to convert raw file text into word pairs.
+   */
   constructor(parser = new LexiconParser()) {
     this.#parser = parser
   }

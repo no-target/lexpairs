@@ -3,7 +3,7 @@ import { WordPairCollection } from './WordPairCollection.js'
 import { LexiconLookup } from './LexiconLookup.js'
 
 /**
- * A collection of word pairs that can be loaded from files and looked up.
+ * A collection of word pairs that can be loaded from files. Provides different methods for look ups.
  *
  * @example
  * // Create an empty lexicon
@@ -38,7 +38,7 @@ export class Lexicon {
   }
 
   /**
-   * Provides access to lookup strategies over the lexicon.
+   * Provides access to lookup strategies to be used on the lexicon.
    *
    * @returns {LexiconLookup} The lookup service for the lexicon.
    */
