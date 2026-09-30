@@ -6,38 +6,38 @@ export class LevenshteinCalculator {
    * Calculates the minimum number of single-character edits
    * needed to transform one string into another.
    *
-   * @param {string} firstText - The first string.
-   * @param {string} secondText - The second string.
+   * @param {string} firstWord - The first string.
+   * @param {string} secondWord - The second string.
    * @returns {number} The Levenshtein edit distance.
    * @throws {TypeError} If either argument is not a string.
    */
-  calculateDistance(firstText, secondText) {
-    if (typeof firstText !== 'string' || typeof secondText !== 'string') {
+  calculateDistance(firstWord, secondWord) {
+    if (typeof firstWord !== 'string' || typeof secondWord !== 'string') {
       throw new TypeError('Both arguments must be strings')
     }
 
-    const matrix = this.#createDistanceMatrix(firstText, secondText)
+    const matrix = this.#createDistanceMatrix(firstWord, secondWord)
 
-    this.#fillDistanceMatrix(matrix, firstText, secondText)
+    this.#fillDistanceMatrix(matrix, firstWord, secondWord)
 
-    return matrix[firstText.length][secondText.length]
+    return matrix[firstWord.length][secondWord.length]
   }
 
   /**
    * Creates the distance matrix with its first row and column initialized.
    *
-   * @param {string} firstText - The first string.
-   * @param {string} secondText - The second string.
+   * @param {string} firstWord - The first string.
+   * @param {string} secondWord - The second string.
    * @returns {number[][]} The initialized distance matrix.
    */
-  #createDistanceMatrix(firstText, secondText) {
+  #createDistanceMatrix(firstWord, secondWord) {
     const matrix = []
 
-    for (let firstIndex = 0; firstIndex <= firstText.length; firstIndex++) {
+    for (let firstIndex = 0; firstIndex <= firstWord.length; firstIndex++) {
       matrix[firstIndex] = [firstIndex]
     }
 
-    for (let secondIndex = 0; secondIndex <= secondText.length; secondIndex++) {
+    for (let secondIndex = 0; secondIndex <= secondWord.length; secondIndex++) {
       matrix[0][secondIndex] = secondIndex
     }
 
@@ -48,12 +48,12 @@ export class LevenshteinCalculator {
    * Fills the remaining cells of the distance matrix.
    *
    * @param {number[][]} matrix - The distance matrix.
-   * @param {string} firstText - The first string.
-   * @param {string} secondText - The second string.
+   * @param {string} firstWord - The first string.
+   * @param {string} secondWord - The second string.
    */
-  #fillDistanceMatrix(matrix, firstText, secondText) {
-    for (let firstIndex = 1; firstIndex <= firstText.length; firstIndex++) {
-      this.#fillRow(matrix, firstText, secondText, firstIndex)
+  #fillDistanceMatrix(matrix, firstWord, secondWord) {
+    for (let firstIndex = 1; firstIndex <= firstWord.length; firstIndex++) {
+      this.#fillRow(matrix, firstWord, secondWord, firstIndex)
     }
   }
 
@@ -61,16 +61,16 @@ export class LevenshteinCalculator {
    * Fills one row of the distance matrix.
    *
    * @param {number[][]} matrix - The distance matrix.
-   * @param {string} firstText - The first string.
-   * @param {string} secondText - The second string.
+   * @param {string} firstWord - The first string.
+   * @param {string} secondWord - The second string.
    * @param {number} firstIndex - The index of the current row.
    */
-  #fillRow(matrix, firstText, secondText, firstIndex) {
-    for (let secondIndex = 1; secondIndex <= secondText.length; secondIndex++) {
+  #fillRow(matrix, firstWord, secondWord, firstIndex) {
+    for (let secondIndex = 1; secondIndex <= secondWord.length; secondIndex++) {
       matrix[firstIndex][secondIndex] = this.#calculateCellDistance(
         matrix,
-        firstText,
-        secondText,
+        firstWord,
+        secondWord,
         firstIndex,
         secondIndex
       )
@@ -81,14 +81,14 @@ export class LevenshteinCalculator {
    * Calculates the minimum distance for a single cell.
    *
    * @param {number[][]} matrix - The distance matrix.
-   * @param {string} firstText - The first string.
-   * @param {string} secondText - The second string.
+   * @param {string} firstWord - The first string.
+   * @param {string} secondWord - The second string.
    * @param {number} firstIndex - The current row index.
    * @param {number} secondIndex - The current column index.
    * @returns {number} The minimum distance for the cell.
    */
-  #calculateCellDistance(matrix, firstText, secondText, firstIndex, secondIndex) {
-    const charactersAreEqual = firstText[firstIndex - 1] === secondText[secondIndex - 1]
+  #calculateCellDistance(matrix, firstWord, secondWord, firstIndex, secondIndex) {
+    const charactersAreEqual = firstWord[firstIndex - 1] === secondWord[secondIndex - 1]
 
     const substitutionCost = charactersAreEqual ? 0 : 1
 

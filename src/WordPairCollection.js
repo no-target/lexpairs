@@ -3,10 +3,6 @@ import { WordPair } from './WordPair.js'
 /**
  * A collection that stores unique WordPairs.
  *
- * @example
- * const collection = new WordPairCollection()
- * collection.add('hus', 'haus')
- * collection.findCounterparts('hus') // ['haus']
  */
 export class WordPairCollection {
   #pairs
@@ -190,7 +186,7 @@ export class WordPairCollection {
    * @throws {Error} If any pair already exists or appears twice.
    */
   #validatePairs(pairs) {
-    this.#validatetWordPair(pairs)
+    this.#validateWordPair(pairs)
     this.#validateNoDuplicatePairs(pairs)
     this.#validateNoExistingPairs(pairs)
   }
@@ -201,7 +197,7 @@ export class WordPairCollection {
    * @param {WordPair[]} pairs - The pairs to validate.
    * @throws {TypeError} If any item is not a WordPair.
    */
-  #validatetWordPair(pairs) {
+  #validateWordPair(pairs) {
     for (const pair of pairs) {
       if (!(pair instanceof WordPair)) {
         throw new TypeError('Each item must be a WordPair')

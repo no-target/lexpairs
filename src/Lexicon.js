@@ -3,7 +3,7 @@ import { WordPairCollection } from './WordPairCollection.js'
 import { LexiconLookup } from './LexiconLookup.js'
 
 /**
- * A collection of word pairs that can be loaded from files. Provides different methods for look ups.
+ * A collection of word pairs. Provides different methods for look ups.
  *
  * @example
  * // Create an empty lexicon
@@ -13,7 +13,7 @@ import { LexiconLookup } from './LexiconLookup.js'
  * await lexicon.loadFromFile('words.csv', ',')
  *
  * // Look up an exact match
- * lexicon.lookup.findByHeadword('hus')
+ * lexicon.lookup.findPairsByHeadword('hus')
  * // → [{ headword: 'hus', counterpart: 'house' }]
  *
  * // Fuzzy lookup: find headwords within 2 edits of 'huss'
