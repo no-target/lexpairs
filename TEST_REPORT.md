@@ -12,7 +12,7 @@ the test run here.*
 
 ## Test Run
 
-![Test run](./vitest-results/test-run.png)
+![Test run](./vitest-results/test.run.png)
 
 ## Test Results
 
