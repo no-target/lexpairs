@@ -6,16 +6,12 @@ Intended for programmers who need to work with word pairs, for example translati
 
 ## Features
 
-`lexpairs` provides a `Lexicon` class for working with word pairs. It supports:
+`lexpairs` provides a `Lexicon` class for working with word pairs.
 
 - Adding and removing word pairs
-- Checking whether a word pair exists
-- Finding headwords and counterparts
-- Exact, case-insensitive lookups
+- Various lookup methods for searching through word pairs.
 - Fuzzy lookups using Levenshtein distance
-- Parsing word pairs from delimited text
-- Parsing word pairs from JSON
-- Loading word pairs from simple text files
+- Loading word pairs from simple text files or JSON
 
 Words are trimmed and compared case-insensitively.
 
@@ -33,9 +29,7 @@ Words are trimmed and compared case-insensitively.
 
 ### Prerequisites
 
-Ensure you have **Node.js** (version 24.12.0 or later) and **Git** installed on your machine.
-
-The module uses ES modules and requires a JavaScript environment that supports import and export.
+Requires **Node.js** (version 24.12.0 or later).
 
 ### Installation & Project Setup
 
