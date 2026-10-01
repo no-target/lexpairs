@@ -1,2 +1,2 @@
-// Public API
-export { Lexicon } from './src/Lexicon.js'
+ // Public API
+export { Lexicon } from './Lexicon.js'
