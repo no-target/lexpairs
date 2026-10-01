@@ -1,97 +1,103 @@
 # lexpairs
 
-`lexpairs` is a JavaScript module for storing, parsing and looking up pairs of related words.
-
-Intended for programmers who need to work with word pairs, for example translations or other relationships between two words.
+`lexpairs` is a JavaScript module for working with pairs of related words. It can be used for translations, synonyms, or other relationships between words.
 
 ## Features
 
 `lexpairs` provides a `Lexicon` class for working with word pairs.
 
-- Adding and removing word pairs
-- Various lookup methods for searching through word pairs.
-- Fuzzy lookups using Levenshtein distance
-- Loading word pairs from simple text files or JSON
-
-Words are trimmed and compared case-insensitively.
+- Store and manage a collection of word pairs
+- Load word pairs from delimited text files (CSV, TSV, or similar)
+- Load word pairs from JSON arrays, with configurable property names
+- Look up word pairs by either word
+- Fuzzy lookups using Levenshtein distance.
 
 ## What it does not do
 
-- It is not a complete application. It has no user interface.
-- It does not translate words itself.
-- It does not retrieve word pairs from external APIs or dictionaries.
+- Does not handle quoted fields or delimiter characters within words (no full RFC 4180 CSV support)
+- Does not support binary or multi-file dictionary formats (e.g. StarDict)
+- Does not write/save word pairs back to a file
+- JSON input must be an array of objects. Flat key-value objects such as `{"word": "translation"}` are not supported.
 
----
+## Installation
+
+Requires Node.js 24 or later.
+
+   ```bash
+npm install no-target/lexpairs
+   ```
 
 ## Usage
 
+```javascript
+import { Lexicon } from 'lexpairs'
 
+const lexicon = new Lexicon()
 
-### Prerequisites
+lexicon.add('hus', 'Haus')
+lexicon.add('sova', 'pennen')
+lexicon.add('sova', 'schlafen')
 
-Requires **Node.js** (version 24.12.0 or later).
+lexicon.lookup.findCounterparts('hus')        // ['Haus']
+lexicon.lookup.findHeadwords('Haus')          // ['hus']
+lexicon.lookup.findPairsByHeadword('sova')    // both pairs for 'sova'
 
-### Installation & Project Setup
+lexicon.lookup.similarHeadword('såva', 1)    // pairs with headwords within edit distance 1 of 'såva'
 
+await lexicon.loadFromFile('./words.csv')             // comma-delimited by default
+await lexicon.loadFromFile('./words.tsv', '\t')       // tab-delimited
+await lexicon.loadFromJson('./words.json', {
+  headwordKey: 'sv',
+  counterpartKey: 'de'
+})
 
-   ```bash
-   git clone
-   cd <your-repository-name>
-   ```
-
-   ```bash
-   npm install
-   ```
-
----
-
-## Available Scripts
-
-### Running Tests
-
-- **Interactive Watch Mode (Recommended for development):**
-  ```bash
-  npm test
-  ```
-- **Single Execution Run:**
-  ```bash
-  npm run test:run
-  ```
-- **Run Specific Tests (by matching name patterns):**
-  ```bash
-  npm run test:match -- <test-name-pattern>
-  ```
-
-### Code Linting
-
-Analyze the source code in `src/` for errors, syntax issues, and anti-patterns:
-
-```bash
-npm run lint
 ```
 
-Automatically fix fixable linting issues:
+## Input Formats
 
-```bash
-npm run lint:fix
+### Delimited text files
+
+Each line is split using the specified delimiter. The first two fields are used as the `headword` and `counterpart`; additional fields are ignored. Empty or incomplete lines are skipped. 
+
+The delimiter defaults to a comma:
+
+```javascript
+await lexicon.loadFromFile('./words.csv')
 ```
 
-### Formatting
+For tab-delimited files:
+```javascript
 
-Check if files comply with Prettier styling rules:
-
-```bash
-npm run format:check
+await lexicon.loadFromFile('./words.tsv', '\t')
+```
+Custom delimiters are also supported:
+```javascript
+await lexicon.loadFromFile('./words.txt', ';')
 ```
 
-Automatically reformat all source files:
+### JSON
 
-```bash
-npm run format
+JSON input must be an array of objects. The property names containing the headword and counterpart are configurable.
+
+```json
+[
+  { "sv": "hus", "de": "Haus" },
+  { "sv": "sova", "de": "schlafen" },
+  { "sv": "sova", "de": "pennen" }
+]
 ```
 
+The corresponding property names are specified when loading the file:
 
----
+```javascript
+
+await lexicon.loadFromJson('./words.json', {
+  headwordKey: 'sv',
+  counterpartKey: 'de'
+})
+```
+
+The values of `headwordKey` and `counterpartKey` specify which property names to use from the JSON objects.
 
 ##  License
-
+MIT
