@@ -53,12 +53,12 @@ export class LevenshteinCalculator {
   #createDistanceMatrix() {
     const matrix = []
 
-    for (let firstIndex = 0; firstIndex <= this.#firstWord.length; firstIndex++) {
-      matrix[firstIndex] = [firstIndex]
+    for (let row = 0; row <= this.#firstWord.length; row++) {
+      matrix[row] = [row]
     }
 
-    for (let secondIndex = 0; secondIndex <= this.#secondWord.length; secondIndex++) {
-      matrix[0][secondIndex] = secondIndex
+    for (let column = 0; column <= this.#secondWord.length; column++) {
+      matrix[0][column] = column
     }
 
     return matrix
@@ -71,8 +71,8 @@ export class LevenshteinCalculator {
    * calculation of individual rows to {@link #fillRow}.
    */
   #fillDistanceMatrix() {
-    for (let firstIndex = 1; firstIndex <= this.#firstWord.length; firstIndex++) {
-      this.#fillRow(firstIndex)
+    for (let row = 1; row <= this.#firstWord.length; row++) {
+      this.#fillRow(row)
     }
   }
 
@@ -83,11 +83,11 @@ export class LevenshteinCalculator {
    * transform the corresponding prefix of the first word into
    * the corresponding prefix of the second word.
    *
-   * @param {number} firstIndex - The index of the row to fill.
+   * @param {number} row - The index of the row to fill.
    */
-  #fillRow(firstIndex) {
-    for (let secondIndex = 1; secondIndex <= this.#secondWord.length; secondIndex++) {
-      this.#distanceMatrix[firstIndex][secondIndex] = this.#calculateCellDistance(firstIndex, secondIndex)
+  #fillRow(row) {
+    for (let column = 1; column <= this.#secondWord.length; column++) {
+      this.#distanceMatrix[row][column] = this.#calculateCellDistance(row, column)
     }
   }
 
@@ -104,20 +104,20 @@ export class LevenshteinCalculator {
    * Otherwise, substitution has a cost of one. The operation with
    * the lowest total cost determines the value of the cell.
    *
-   * @param {number} firstIndex - The current row index.
-   * @param {number} secondIndex - The current column index.
+   * @param {number} row - The current row index.
+   * @param {number} column - The current column index.
    * @returns {number} The minimum number of edits required for the current cell.
    */
-  #calculateCellDistance(firstIndex, secondIndex) {
-    const charactersAreEqual = this.#firstWord[firstIndex - 1] === this.#secondWord[secondIndex - 1]
+  #calculateCellDistance(row, column) {
+    const charactersAreEqual = this.#firstWord[row - 1] === this.#secondWord[column - 1]
 
     const substitutionCost = charactersAreEqual ? 0 : 1
 
-    const viaSubstitution = this.#distanceMatrix[firstIndex - 1][secondIndex - 1] + substitutionCost
+    const viaSubstitution = this.#distanceMatrix[row - 1][column - 1] + substitutionCost
 
-    const viaInsertion = this.#distanceMatrix[firstIndex][secondIndex - 1] + 1
+    const viaInsertion = this.#distanceMatrix[row][column - 1] + 1
 
-    const viaDeletion = this.#distanceMatrix[firstIndex - 1][secondIndex] + 1
+    const viaDeletion = this.#distanceMatrix[row - 1][column] + 1
 
     return Math.min(viaSubstitution, viaInsertion, viaDeletion)
   }

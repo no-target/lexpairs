@@ -11,8 +11,7 @@ export class LexiconLookup {
   /**
    * Creates a new lookup service for the given collection.
    *
-   * Uses Levenshtein distance by default, any calculator with a
-   * distance(a, b) method can be passed in.
+   * Uses Levenshtein distance by default.
    *
    * @param {WordPairCollection} collection - The collection to look up in.
    * @param {LevenshteinCalculator} [distanceCalculator] - The distance calculator to use.
