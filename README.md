@@ -9,8 +9,7 @@
 - Store and manage a collection of word pairs
 - Load word pairs from delimited text files (CSV, TSV, or similar)
 - Load word pairs from JSON arrays, with configurable property names
-- Look up word pairs by either word
-- Fuzzy lookups using Levenshtein distance.
+- Case-insensitive lookups by either word, including fuzzy matching with Levenshtein distance
 
 ## What it does not do
 
